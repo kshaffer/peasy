@@ -1,11 +1,18 @@
-var site = JSON.parse('{ "title": "Peasy test blog", "author": "Kris Shaffer" }');
-var page = JSON.parse('{ "title": "This is the post title", "author": "Kris Shaffer", "text": "<p>This is post content.</p><p>And here is another paragraph.</p>" }');
+window.onload = function() {
+  var post_list_content = '';
 
-window.onload=function() {
+  for(i = content.posts.length - 1; i >= 0; i -= 1) {
+    post_list_content += '<h1>';
+    post_list_content += content.posts[i].title;
+    post_list_content += '</h1>\n<h2>';
+    post_list_content += content.posts[i].author;
+    post_list_content += '</h2>\n<br/>';
+    post_list_content += content.posts[i].text;
+    post_list_content += '\n<br/><hr/><br/>';
+}
+
+  document.getElementById('list-of-posts').innerHTML = post_list_content;
   document.getElementById('site-title').innerHTML = site.title;
   document.getElementById('banner-title').innerHTML = site.title;
-  document.getElementById('site-author').innerHTML = site.author;
-  document.getElementById('post-title').innerHTML = page.title;
-  document.getElementById('post-text').innerHTML = page.text;
-  document.getElementById('post-author').innerHTML = page.author;
+  document.getElementById('site-author').innerHTML = 'by ' + site.author;
 }
