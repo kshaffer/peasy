@@ -5,8 +5,8 @@ var site = {
   "tagline": "",
   "index_feature_image": "",
   "index_feature_image_credit": "",
-  "url": "http://peasy.pushpullfork.com/"
-  //"url": "file:///C:/Users/jstommel-admin/repos/supersimpleblog/index.html"
+  "url": "https://peasy.pushpullfork.com/"
+  //"url": "file:///C:/Users/jstommel-admin/repos/supersimpleblog/"
   };
 
 var content = {

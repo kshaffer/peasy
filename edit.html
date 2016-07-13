@@ -10,7 +10,7 @@
     <!-- Blog content -->
     <script type="text/javascript" src="database.json"></script>
     <script type="text/javascript" src="urlobject.js"></script>
-    <script type="text/javascript" src="render_page.js"></script>
+    <script type="text/javascript" src="edit_page.js"></script>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -53,7 +53,13 @@
 
         <hr/>
 
-        <div id="list-of-posts"</div>
+        <form name="editedpost" method="post" onsubmit="return collectContent()">
+          Author:<br/><input type="text" name="author" style="width: 100%"><br/>
+          Title:<br/><input type="text" name="title" style="width: 100%"><br/>
+          Post content:<br/><input type="text" name="postcontent" style="width: 100%; height: 20em"><br/>
+          <button type="submit" value="submit">Create</button>
+        </form>
+        <div id="post-content"></div>
 
       </div>
       <div class="col-md-3"></div>
