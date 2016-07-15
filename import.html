@@ -8,7 +8,7 @@
     <title id="site-title"></title>
 
     <!-- Blog content -->
-    <script type="text/javascript" src="edit_page.js"></script>
+    <script type="text/javascript" src="import_page.js"></script>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -51,14 +51,10 @@
 
         <hr/>
 
-        <form name="editedpost" method="post" action="editpost" onsubmit="return collectContent()">
-          Title:<br/><input type="text" name="title" id="course-title" value="Title of course" style="width: 100%"><br/>
-          Author:<br/><input type="text" name="author" id="course-instructor" value="Course instructor" style="width: 100%"><br/>
-          Post content:<br/><textarea type="text" name="postcontent" id="syllabus-content" value="Syllabus content" style="width: 100%; height: 30em"></textarea><br/>
-          <button type="submit" value="submit">Update</button>
+        <form name="importurl" method="post" action="importpost" onsubmit="return editFromURL()">
+          URL (Web address) of syllabus to import:<br/><input type="text" name="syllabusurl" id="syllabusurl" value="https://peasy.pushpullfork.com/" style="width: 100%"><br/>
+          <button type="submit" value="submit">Clone</button>
         </form>
-        <div id="post-content"></div>
-
       </div>
       <div class="col-md-2"></div>
     </div>
