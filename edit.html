@@ -8,8 +8,6 @@
     <title id="site-title"></title>
 
     <!-- Blog content -->
-    <script type="text/javascript" src="database.json"></script>
-    <script type="text/javascript" src="urlobject.js"></script>
     <script type="text/javascript" src="edit_page.js"></script>
 
     <!-- Bootstrap -->
@@ -47,22 +45,22 @@
     </nav>
 
     <div class="container">
-      <div class="col-md-3"></div>
-      <div class="col-md-6">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
         <h1 id="banner-title"></h1>
 
         <hr/>
 
         <form name="editedpost" method="post" action="editpost" onsubmit="return collectContent()">
-          Author:<br/><input type="text" name="author" style="width: 100%"><br/>
-          Title:<br/><input type="text" name="title" style="width: 100%"><br/>
-          Post content:<br/><input type="text" name="postcontent" style="width: 100%; height: 20em"><br/>
+          Title:<br/><input type="text" name="title" id="course-title" value="Title of course" style="width: 100%"><br/>
+          Author:<br/><input type="text" name="author" id="course-instructor" value="Course instructor" style="width: 100%"><br/>
+          Post content:<br/><textarea type="text" name="postcontent" id="syllabus-content" value="Syllabus content" style="width: 100%; height: 30em"></textarea><br/>
           <button type="submit" value="submit">Create</button>
         </form>
         <div id="post-content"></div>
 
       </div>
-      <div class="col-md-3"></div>
+      <div class="col-md-2"></div>
     </div>
 
     <!-- Bootstrap core JavaScript

@@ -1,4 +1,30 @@
 window.onload = function() {
+  // load site data from meta.json
+  $.getJSON('meta.json', function (data) {
+    var site = data;
+
+    // populate website info with metadata
+    document.getElementById('site-title').innerHTML = site.title;
+    document.getElementById('syllabus-footer').innerHTML = (site.footer_copyright + ' ' + site.author + '. ' + site.footer_license);
+  });
+
+  // load dyllabus data from syllabus.json
+  $.getJSON('syllabus.json', function (data) {
+    var syllabus = data;
+
+    // populate website info with metadata
+    document.getElementById('course-title').innerHTML = syllabus.title;
+    document.getElementById('course-author').innerHTML = syllabus.author;
+    document.getElementById('syllabus-content').innerHTML = syllabus.content;
+  });
+
+};
+
+
+// The following code can be used for a blog format, rather than a single page
+
+/*
+window.onload = function() {
   var post_list_content = '';
 
   // post a single page if asked via URL query
@@ -33,4 +59,5 @@ window.onload = function() {
   document.getElementById('site-title').innerHTML = site.title;
   document.getElementById('banner-title').innerHTML = site.title;
   document.getElementById('site-author').innerHTML = 'by ' + site.author;
-}
+};
+*/
