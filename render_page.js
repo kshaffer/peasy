@@ -18,6 +18,11 @@ window.onload = function() {
     document.getElementById('syllabus-content').innerHTML = syllabus.content;
   });
 
+  // get navbar and load into html
+  $.get('navbar.html', function (data) {
+    var navbarContent = data;
+    document.getElementById('navbar').innerHTML = navbarContent;
+  });
 };
 
 

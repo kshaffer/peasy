@@ -8,6 +8,11 @@ window.onload = function() {
     document.getElementById('site-title').innerHTML = site.title;
   });
 
+    // get navbar and load into html
+    $.get('navbar.html', function (data) {
+      var navbarContent = data;
+      document.getElementById('navbar').innerHTML = navbarContent;
+    });
 }
 
 function visitEditPage(){
@@ -24,7 +29,7 @@ function editFromURL() {
   $.get(syllabusurl, function (data) {
 
     var syllabus = JSON.parse(data);
-    
+
     var author = syllabus.author;
     var title = syllabus.title;
     var content = syllabus.content;
