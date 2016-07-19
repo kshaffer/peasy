@@ -119,3 +119,35 @@ function editFromURL() {
 
   event.preventDefault();
 };
+
+function loginScript() {
+  var username = document.loginform.username.value;
+  var password = document.loginform.password.value;
+
+  var login_object = {
+    "action": "authenticate",
+    "username": username,
+    "password": password
+  }
+  var login_object_string = JSON.stringify(login_object);
+
+  // send login info to PHP API
+
+  $.ajax({
+  type: 'POST',
+  /*
+  xhrFields: {
+       withCredentials: true
+   },
+   headers: {
+       'Authorization': 'Basic ' + btoa(username + ':' + password)
+   },
+   */
+   url: './secure.php',
+  data: { data: login_object_string },
+  success: alert('login successful!'),
+  dataType: 'application/json'
+});
+
+  event.preventDefault();
+};
