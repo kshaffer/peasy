@@ -120,6 +120,10 @@ function editFromURL() {
   event.preventDefault();
 };
 
+function alertResponse(resp) {
+  alert(String(resp));
+};
+
 function loginScript() {
   var username = document.loginform.username.value;
   var password = document.loginform.password.value;
@@ -145,8 +149,10 @@ function loginScript() {
    */
    url: './secure.php',
   data: { data: login_object_string },
-  success: alert('login successful!'),
-  dataType: 'application/json'
+  success: alertResponse(),
+  error: function (jqXHR, textStatus, errorThrown) {
+              alert("jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown);
+            }
 });
 
   event.preventDefault();
