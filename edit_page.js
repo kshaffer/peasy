@@ -46,6 +46,9 @@ function visitPage(){
         window.location='/';
     }
 
+function goToEdit() {
+  window.location='/edit.html';
+}
 // collect document information from form`
 function collectContent() {
   var author = document.editedpost.author.value;
@@ -120,10 +123,6 @@ function editFromURL() {
   event.preventDefault();
 };
 
-function alertResponse(resp) {
-  alert(String(resp));
-};
-
 function loginScript() {
   var username = document.loginform.username.value;
   var password = document.loginform.password.value;
@@ -149,8 +148,14 @@ function loginScript() {
    */
    url: './secure.php',
   data: { data: login_object_string },
-  success: alertResponse(),
+  dataType: 'json',
+  success: function(returnedData) {
+    //alert(text);
+    window.sessionStorage.token = returnedData.jwt;
+    goToEdit();
+  },
   error: function (jqXHR, textStatus, errorThrown) {
+              delete window.sessionStorage.token;
               alert("jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown);
             }
 });
