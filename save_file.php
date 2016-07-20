@@ -1,6 +1,6 @@
 <?php
    $json = $_POST['data'];
-   $file = fopen('syllabus.json','wb');
+   $file = fopen('site_content.json','wb');
    fwrite($file, $json);
    fclose($file);
 ?>

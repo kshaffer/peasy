@@ -8,7 +8,7 @@
     <title id="site-title"></title>
 
     <!-- Blog content -->
-    <script type="text/javascript" src="import_page.js"></script>
+    <script type="text/javascript" src="app.js"></script>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -21,19 +21,19 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
+  <body onload="getSiteTitle(); getNavbar(); ">
 
     <div id="navbar"></div>
 
     <div class="container">
       <div class="col-md-2"></div>
       <div class="col-md-8">
-        <h1 id="banner-title"></h1>
+        <h1 id="import-page">Import</h1>
 
         <hr/>
 
         <form name="importurl" method="post" action="importpost" onsubmit="return editFromURL()">
-          URL (Web address) of syllabus to import:<br/><input type="text" name="syllabusurl" id="syllabusurl" value="https://peasy.pushpullfork.com/" style="width: 100%"><br/>
+          URL (Web address) of page to import (must be another Peasy site):<br/><input type="text" name="syllabusurl" id="syllabusurl" value="https://peasy.pushpullfork.com/" style="width: 100%"><br/><br/>
           <button type="submit" value="submit">Clone</button>
         </form>
       </div>

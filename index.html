@@ -8,7 +8,7 @@
     <title id="site-title"></title>
 
     <!-- Blog content -->
-    <script type="text/javascript" src="render_page.js"></script>
+    <script type="text/javascript" src="app.js"></script>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -21,19 +21,19 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
+  <body onload="getSiteTitle(); getNavbar(); getFooter(); getIndexContent();">
 
     <div id="navbar"></div>
 
     <div class="container">
       <div class="col-md-2"></div>
       <div class="col-md-8">
-        <h1 id="course-title"></h1>
-        <h2 id="course-author"></h2>
+        <h1 id="page-heading"></h1>
+        <h2 id="page-subheading"></h2>
         <hr/>
-        <div id="syllabus-content"></div>
+        <div id="page-content"></div>
         <hr/>
-        <div id="syllabus-footer"></div>
+        <div id="page-footer"></div>
 
 
       </div>
