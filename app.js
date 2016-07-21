@@ -6,7 +6,7 @@ function getHeaderAndFooter() {
     document.getElementById('page-footer').innerHTML = (site.footer_copyright + ' ' + site.author + '. ' + site.footer_license);
   });
   // get navbar from navbar.html and load into html
-  $.get('navbar.html', function (data) {
+  $.get('includes/navbar.html', function (data) {
     var navbarContent = data;
     document.getElementById('navbar').innerHTML = navbarContent;
   });
@@ -31,14 +31,6 @@ function populateForm(data) {
     document.getElementById('syllabus-content').value = syllabus.content;
 
   };
-
-function goToHomePage(){
-  window.location='/';
-};
-
-function goToEdit() {
-  window.location='/edit.html';
-};
 
 // collect document information from form`
 function collectContent() {
@@ -65,7 +57,7 @@ function collectContent() {
   type: 'POST',
   url: './save_file.php',
   data: { data: post_object_string },
-  success: goToHomePage(),
+  success: getIndexContent(),
   dataType: 'application/json'
 });
 
@@ -93,7 +85,7 @@ function loginToSite() {
   success: function(returnedData) {
     //alert(text);
     window.sessionStorage.token = returnedData.jwt;
-    goToEdit();
+    getEditForm();
   },
   error: function (jqXHR, textStatus, errorThrown) {
               delete window.sessionStorage.token;
@@ -138,7 +130,7 @@ function editFromURL() {
     type: 'POST',
     url: './save_file.php',
     data: { data: post_object_string },
-    success: goToEdit(),
+    success: getEditForm(),
     dataType: 'application/json'
     });
   });
@@ -148,7 +140,7 @@ function editFromURL() {
 
 function getImportForm() {
   // get navbar from navbar.html and load into html
-  $.get('import_form.html', function (data) {
+  $.get('includes/import_form.html', function (data) {
     var importFormContent = data;
     document.getElementById('page-content').innerHTML = importFormContent;
   });
@@ -156,7 +148,7 @@ function getImportForm() {
 
 function getEditForm() {
   // get navbar from navbar.html and load into html
-  $.get('edit_form.html', function (data) {
+  $.get('includes/edit_form.html', function (data) {
     var importForm = data;
     document.getElementById('page-content').innerHTML = importForm;
     // load syllabus data from site_content.json and populate form
