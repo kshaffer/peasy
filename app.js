@@ -22,17 +22,30 @@ function getIndexContent() {
   });
 };
 
-function populateForm(data) {
-    var syllabus = JSON.parse(data);
+// opens edit page, loads data from database for editing
+function getEditForm() {
+  $.get('includes/edit_form.html', function (data) {
+    var importForm = data;
+    document.getElementById('page-content').innerHTML = importForm;
+    // load page data from site_content.json and populate form
+    $.getJSON('site_content.json', function (data) {
+      var siteContent = data;
+      document.getElementById('edit-content-title').value = siteContent.title;
+      document.getElementById('edit-content-author').value = siteContent.author;
+      document.getElementById('edit-page-content').value = siteContent.content;
+    });
+  });
+};
 
-    // populate website info with metadata
-    document.getElementById('course-title').value = syllabus.title;
-    document.getElementById('course-instructor').value = syllabus.author;
-    document.getElementById('syllabus-content').value = syllabus.content;
+function getImportForm() {
+  // get navbar from navbar.html and load into html
+  $.get('includes/import_form.html', function (data) {
+    var importFormContent = data;
+    document.getElementById('page-content').innerHTML = importFormContent;
+  });
+};
 
-  };
-
-// collect document information from form`
+// collect document information from edit form`and write to database
 function collectContent() {
   var author = document.editedpost.author.value;
   var title = document.editedpost.title.value;
@@ -138,26 +151,11 @@ function editFromURL() {
   event.preventDefault();
 };
 
-function getImportForm() {
+function getLoginForm() {
   // get navbar from navbar.html and load into html
-  $.get('includes/import_form.html', function (data) {
+  $.get('includes/login_form.html', function (data) {
     var importFormContent = data;
     document.getElementById('page-content').innerHTML = importFormContent;
-  });
-};
-
-function getEditForm() {
-  // get navbar from navbar.html and load into html
-  $.get('includes/edit_form.html', function (data) {
-    var importForm = data;
-    document.getElementById('page-content').innerHTML = importForm;
-    // load syllabus data from site_content.json and populate form
-    $.getJSON('site_content.json', function (data) {
-      var siteContent = data;
-      document.getElementById('edit-content-title').value = siteContent.title;
-      document.getElementById('edit-content-author').value = siteContent.author;
-      document.getElementById('edit-page-content').value = siteContent.content;
-    });
   });
 };
 
