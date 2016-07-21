@@ -1,33 +1,14 @@
-function getSiteBanner() {
-  // load site data from meta.json and populate banner
-  $.getJSON('meta.json', function (data) {
-    var site = data;
-    document.getElementById('page-heading').innerHTML = site.title;
-    document.getElementById('page-subheading').innerHTML = site.author;
-  });
-};
-
-function getSiteTitle() {
+function getHeaderAndFooter() {
   // load site data from meta.json and populate banner
   $.getJSON('meta.json', function (data) {
     var site = data;
     document.getElementById('site-title').innerHTML = site.title;
+    document.getElementById('page-footer').innerHTML = (site.footer_copyright + ' ' + site.author + '. ' + site.footer_license);
   });
-};
-
-function getNavbar() {
   // get navbar from navbar.html and load into html
   $.get('navbar.html', function (data) {
     var navbarContent = data;
     document.getElementById('navbar').innerHTML = navbarContent;
-  });
-};
-
-function getFooter() {
-  // load site data from meta.json and populate banner
-  $.getJSON('meta.json', function (data) {
-    var site = data;
-    document.getElementById('page-footer').innerHTML = (site.footer_copyright + ' ' + site.author + '. ' + site.footer_license);
   });
 };
 
@@ -38,7 +19,6 @@ function getIndexContent() {
     document.getElementById('page-heading').innerHTML = siteContent.title;
     document.getElementById('page-subheading').innerHTML = siteContent.author;
     document.getElementById('page-content').innerHTML = siteContent.content;
-    document.getElementById('page-footer').innerHTML = siteContent.footer;
   });
 };
 
@@ -51,16 +31,6 @@ function populateForm(data) {
     document.getElementById('syllabus-content').value = syllabus.content;
 
   };
-
-function getContentForEditing() {
-  // load syllabus data from site_content.json and populate form
-  $.getJSON('site_content.json', function (data) {
-    var siteContent = data;
-    document.getElementById('content-title').value = siteContent.title;
-    document.getElementById('content-author').value = siteContent.author;
-    document.getElementById('page-content').value = siteContent.content;
-  });
-};
 
 function goToHomePage(){
   window.location='/';
@@ -176,8 +146,33 @@ function editFromURL() {
   event.preventDefault();
 };
 
+function getImportForm() {
+  // get navbar from navbar.html and load into html
+  $.get('import_form.html', function (data) {
+    var importFormContent = data;
+    document.getElementById('page-content').innerHTML = importFormContent;
+  });
+};
 
-// The following code can be used for a blog format, rather than a single page
+function getEditForm() {
+  // get navbar from navbar.html and load into html
+  $.get('edit_form.html', function (data) {
+    var importForm = data;
+    document.getElementById('page-content').innerHTML = importForm;
+    // load syllabus data from site_content.json and populate form
+    $.getJSON('site_content.json', function (data) {
+      var siteContent = data;
+      document.getElementById('edit-content-title').value = siteContent.title;
+      document.getElementById('edit-content-author').value = siteContent.author;
+      document.getElementById('edit-page-content').value = siteContent.content;
+    });
+  });
+};
+
+
+
+// The following code can be used as the skeleton of a blog format, rather than a single page
+// this is old code that needs tweaking in light of updates to the js
 
 /*
 window.onload = function() {
