@@ -33,6 +33,9 @@ function getIndexContent() {
     document.getElementById('page-heading').innerHTML = siteContent.title;
     document.getElementById('page-subheading').innerHTML = siteContent.author;
     document.getElementById('page-content').innerHTML = siteContent.content;
+    document.getElementById('title-edit-label').innerHTML = '';
+    document.getElementById('author-edit-label').innerHTML = '';
+    document.getElementById('content-edit-label').innerHTML = '';
   });
 };
 
@@ -44,9 +47,17 @@ function getEditForm() {
     url: 'edit_content.php',
     success: function (data) {
       var editFormContent = data;
-      document.getElementById('page-heading').innerHTML = 'Edit page';
+      document.getElementById('page-heading').innerHTML = '';
       document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = editFormContent.form_content;
+      //document.getElementById('title-edit-label').innerHTML = 'title:';
+      //document.getElementById('author-edit-label').innerHTML = 'author:';
+      //document.getElementById('content-edit-label').innerHTML = 'content:';
+      document.getElementById('content-edit-label').innerHTML = 'click to edit:';
+      document.getElementById('title-edit-label').style = 'text-align: right;';
+      document.getElementById('author-edit-label').style = 'text-align: right;';
+      document.getElementById('content-edit-label').style = 'text-align: right; color: #7B7D7D;';
+
       // load page data from site_content.json and populate form
       $.getJSON('site_content.json', function (data) {
         var siteContent = data;
