@@ -5,8 +5,17 @@ function getHeaderAndFooter() {
     document.getElementById('site-title').innerHTML = site.title;
     document.getElementById('page-footer').innerHTML = (site.footer_copyright + ' ' + site.author + '. ' + site.footer_license);
   });
-  // get navbar from navbar.html and load into html
-  $.get('includes/navbar.html', function (data) {
+};
+
+function getLoggedOutNavbar() {
+  $.get('includes/navbar_loggedout.html', function (data) {
+    var navbarContent = data;
+    document.getElementById('navbar').innerHTML = navbarContent;
+  });
+};
+
+function getLoggedInNavbar() {
+  $.get('includes/navbar_loggedin.html', function (data) {
     var navbarContent = data;
     document.getElementById('navbar').innerHTML = navbarContent;
   });
@@ -16,6 +25,11 @@ function getIndexContent() {
   // load syllabus data from site_content.json and populate page
   $.getJSON('site_content.json', function (data) {
     var siteContent = data;
+    if (sessionStorage.token) {
+      getLoggedInNavbar();
+    } else {
+      getLoggedOutNavbar();
+    };
     document.getElementById('page-heading').innerHTML = siteContent.title;
     document.getElementById('page-subheading').innerHTML = siteContent.author;
     document.getElementById('page-content').innerHTML = siteContent.content;
@@ -40,19 +54,6 @@ function getEditForm() {
       });
     }
   })
-  /*
-  $.get('includes/edit_form.html', function (data) {
-    var importForm = data;
-    document.getElementById('page-content').innerHTML = importForm;
-    // load page data from site_content.json and populate form
-    $.getJSON('site_content.json', function (data) {
-      var siteContent = data;
-      document.getElementById('edit-content-title').value = siteContent.title;
-      document.getElementById('edit-content-author').value = siteContent.author;
-      document.getElementById('edit-page-content').value = siteContent.content;
-    });
-  });
-  */
 };
 
 function getImportForm() {
@@ -122,6 +123,7 @@ function loginToSite() {
     //alert(text);
     sessionStorage.token = returnedData.jwt;
     getEditForm();
+    getLoggedInNavbar();
   },
   error: function (jqXHR, textStatus, errorThrown) {
               delete sessionStorage.token;
@@ -132,6 +134,11 @@ function loginToSite() {
   event.preventDefault();
 };
 
+function logout() {
+  delete sessionStorage.token;
+  getLoggedOutNavbar();
+  getIndexContent();
+};
 
 // get URL of syllabus to clone from user,
 // fetch data, then go to edit page
@@ -175,7 +182,6 @@ function editFromURL() {
 };
 
 function getLoginForm() {
-  // get navbar from navbar.html and load into html
   $.get('includes/login_form.html', function (data) {
     var importFormContent = data;
     document.getElementById('page-content').innerHTML = importFormContent;
