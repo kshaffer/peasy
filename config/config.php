@@ -10,5 +10,5 @@ return array(
         'host'     => '', // Database host
         'name'     => '', // Database schema name
     ),
-    'serverName' => 'peasy.pushpullfork.com',
+    'serverName' => 'peasy.pushpullfork.com'
 );

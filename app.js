@@ -39,10 +39,24 @@ function getEditForm() {
 
 function getImportForm() {
   // get navbar from navbar.html and load into html
+  /*
   $.get('includes/import_form.html', function (data) {
     var importFormContent = data;
     document.getElementById('page-content').innerHTML = importFormContent;
   });
+  */
+  $.ajax({
+    /*beforeSend: function (xhr) {
+      xhr.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.getItem('token'));
+    },*/
+    headers: { 'Authorization': ('Bearer ' + sessionStorage.token)},
+    type: 'GET',
+    url: 'import_content.php',
+    success: function (data) {
+      var importFormContent = data;
+      document.getElementById('page-content').innerHTML = importFormContent.form_content;
+    }
+  })
 };
 
 // collect document information from edit form`and write to database
@@ -97,11 +111,11 @@ function loginToSite() {
   dataType: 'json',
   success: function(returnedData) {
     //alert(text);
-    window.sessionStorage.token = returnedData.jwt;
+    sessionStorage.token = returnedData.jwt;
     getEditForm();
   },
   error: function (jqXHR, textStatus, errorThrown) {
-              delete window.sessionStorage.token;
+              delete sessionStorage.token;
               alert("jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown);
             }
 });

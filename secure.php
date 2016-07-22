@@ -28,9 +28,9 @@
 
       $tokenId    = base64_encode(mcrypt_create_iv(32));
       $issuedAt   = time();
-      $notBefore  = $issuedAt + 5;             //Adding 5 seconds
-      $expire     = $notBefore + 1200;            // Adding 20 minutes
-      // $serverName = $config->get('serverName'); // Retrieve the server name from config file
+      $notBefore  = $issuedAt + 1;             //Adding 5 seconds
+      $expire     = $notBefore + 3600;            // Adding 20 minutes
+      $serverName = $config->serverName; // Retrieve the server name from config file
 
       /*
        * Create the token as an array
@@ -58,7 +58,7 @@
      * keep it secure! You'll need the exact key to verify the
      * token later.
      */
-    $secretKey = base64_decode($config->get('jwtKey'));
+    $secretKey = base64_decode($config->get('jwt')->get('key'));
 
     /*
      * Encode the array to a JWT string.
