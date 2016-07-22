@@ -28,7 +28,7 @@
 
       $tokenId    = base64_encode(mcrypt_create_iv(32));
       $issuedAt   = time();
-      $notBefore  = $issuedAt + 1;             //Adding 5 seconds
+      $notBefore  = $issuedAt - 1;             //Adding 5 seconds
       $expire     = $notBefore + 3600;            // Adding 20 minutes
       $serverName = $config->serverName; // Retrieve the server name from config file
 

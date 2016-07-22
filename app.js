@@ -24,6 +24,23 @@ function getIndexContent() {
 
 // opens edit page, loads data from database for editing
 function getEditForm() {
+  $.ajax({
+    headers: { 'Authorization': ('Bearer ' + sessionStorage.token)},
+    type: 'GET',
+    url: 'edit_content.php',
+    success: function (data) {
+      var editFormContent = data;
+      document.getElementById('page-content').innerHTML = editFormContent.form_content;
+      // load page data from site_content.json and populate form
+      $.getJSON('site_content.json', function (data) {
+        var siteContent = data;
+        document.getElementById('edit-content-title').value = siteContent.title;
+        document.getElementById('edit-content-author').value = siteContent.author;
+        document.getElementById('edit-page-content').value = siteContent.content;
+      });
+    }
+  })
+  /*
   $.get('includes/edit_form.html', function (data) {
     var importForm = data;
     document.getElementById('page-content').innerHTML = importForm;
@@ -35,20 +52,12 @@ function getEditForm() {
       document.getElementById('edit-page-content').value = siteContent.content;
     });
   });
+  */
 };
 
 function getImportForm() {
   // get navbar from navbar.html and load into html
-  /*
-  $.get('includes/import_form.html', function (data) {
-    var importFormContent = data;
-    document.getElementById('page-content').innerHTML = importFormContent;
-  });
-  */
   $.ajax({
-    /*beforeSend: function (xhr) {
-      xhr.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.getItem('token'));
-    },*/
     headers: { 'Authorization': ('Bearer ' + sessionStorage.token)},
     type: 'GET',
     url: 'import_content.php',
