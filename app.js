@@ -44,14 +44,22 @@ function getEditForm() {
     url: 'edit_content.php',
     success: function (data) {
       var editFormContent = data;
+      document.getElementById('page-heading').innerHTML = 'Edit page';
+      document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = editFormContent.form_content;
       // load page data from site_content.json and populate form
       $.getJSON('site_content.json', function (data) {
         var siteContent = data;
-        document.getElementById('edit-content-title').value = siteContent.title;
-        document.getElementById('edit-content-author').value = siteContent.author;
-        document.getElementById('edit-page-content').value = siteContent.content;
+        document.getElementById('editContentTitle').innerHTML = siteContent.title;
+        document.getElementById('editContentAuthor').innerHTML = siteContent.author;
+        document.getElementById('editPageContent').innerHTML = siteContent.content;
+        editor = new MediumEditor('.editable');
+        editor.subscribe('editableInput', function (event, editable) {
+          bodyContentInput = editable.innerHTML;
+        });
+        editor.addElements(document.getElementsByClassName('editable'));
       });
+
     }
   })
 };
@@ -71,9 +79,10 @@ function getImportForm() {
 
 // collect document information from edit form`and write to database
 function collectContent() {
-  var author = document.editedpost.author.value;
-  var title = document.editedpost.title.value;
-  var content = document.editedpost.postcontent.value;
+  var allContent = editor.serialize();
+  var title = allContent.editContentTitle.value;
+  var author = allContent.editContentAuthor.value;
+  var content = bodyContentInput;
 
   var post_object = {
     "index": "1",

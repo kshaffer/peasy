@@ -1,6 +1,6 @@
-<form name="editedpost" method="post" action="editpost" onsubmit="return collectContent()">
-  <h3>Title:</h3><input type="text" name="title" id="edit-content-title" placeholder="Title" style="width: 100%"><br/><br/>
-  <h3>Author:</h3><input type="text" name="author" id="edit-content-author" placeholder="Author/instructor" style="width: 100%"><br/><br/>
-  <h3>Post content:</h3><textarea type="text" name="postcontent" id="edit-page-content" placeholder="Content" style="width: 100%; height: 30em"></textarea><br/><br/>
-  <button type="submit" value="submit">Update</button>
+<form name="editedpost" method="post" action="editpost">
+  <h1 type="text" class="editable" name="title" id="editContentTitle" placeholder="Title" style="width: 100%"></h1>
+  <h2 type="text" class="editable" name="author" id="editContentAuthor" placeholder="Author/instructor" style="width: 100%"></h2>
+  <textarea type="text" class="editable" name="postcontent" id="editPageContent" placeholder="Content" style="width: 100%; min-height: 30em"></textarea><br/><br/>
+  <button type="submit" onclick="return collectContent()">Update</button>
 </form>
