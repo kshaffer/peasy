@@ -221,16 +221,18 @@ function getSetupForm() {
       document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = setupFormContent;
       document.getElementById('metaclone').innerHTML = 'https://peasy.pushpullfork.com';
+      secret_key = getNewSecretKey();
     }
   });
 };
 
 function getNewSecretKey() {
-  $.get('generate_key.php', function (data) { return data.secretkey; console.log(data.secretkey)});
+  $.get('generate_key.php', function (data) {
+    secret_key = data.secretkey;
+  });
 };
 
 function writeInitialSetupData() {
-  var secret_key = getNewSecretKey();
   var siteurl = (document.setupform.metaclone.value + '/api.php');
   var title = document.setupform.metatitle.value;
   var author = document.setupform.metaauthor.value;
