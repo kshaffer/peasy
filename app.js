@@ -225,64 +225,59 @@ function getSetupForm() {
   });
 };
 
+function getNewSecretKey() {
+  $.get('generate_key.php', function (data) { return data.secretkey; console.log(data.secretkey)});
+};
 
 function writeInitialSetupData() {
+  var secret_key = getNewSecretKey();
   var siteurl = (document.setupform.metaclone.value + '/api.php');
   var title = document.setupform.metatitle.value;
   var author = document.setupform.metaauthor.value;
   var email = document.setupform.metaemail.value;
   var user = document.setupform.metauser.value;
   var pass = document.setupform.metapass.value;
+  var login_object = {
+    "username": user,
+    "password": pass,
+    "key": secret_key,
+    "algorithm": "HS512",
+    "serverName": window.location.href
+  }
+  var login_object_string = JSON.stringify(login_object);
+  var post_object = {
+    "title": title,
+    "author": author,
+    "footer_copyright": "<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
+    "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.",
+    "copyright_year": "2016",
+    "contact_email": email,
+    "is_setup": true,
+    "index_feature_image": "",
+    "index_feature_image_credit": "",
+    "url": window.location.href,
+    "platform": "peasy",
+    "version": "alpha"
+  }
+  var post_object_string = JSON.stringify(post_object);
 
   // write setup form data to meta.json
-  $.get('meta.json', function (data) {
-    var post_object = {
-      "title": title,
-      "author": author,
-      "footer_copyright": "<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
-      "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.",
-      "copyright_year": "2016",
-      "contact_email": email,
-      "is_setup": true,
-      "index_feature_image": "",
-      "index_feature_image_credit": "",
-      "url": window.location.href,
-      "platform": "peasy",
-      "version": "alpha"
-    }
-    var post_object_string = JSON.stringify(post_object);
-
-    // write site content to file
-
-    $.ajax({
+  $.ajax({
     type: 'POST',
     url: './save_meta.php',
     data: { data: post_object_string },
     success: console.log('Site meta data created.'),
     dataType: 'application/json'
-    });
-    event.preventDefault();
   });
 
   // write new login data to user_db.json
-  $.get('config/user_db.json', function (data) {
-    var login_object = {
-      "username": user,
-      "password": pass
-    }
-    var login_object_string = JSON.stringify(login_object);
-
-    // write site content to file
-
-    $.ajax({
+  $.ajax({
     type: 'POST',
     url: './save_login.php',
     data: { data: login_object_string },
     success: console.log('User account created.'),
     dataType: 'application/json'
     });
-    event.preventDefault();
-  });
 
   // load site data from site to clone
   $.get(siteurl, function (data) {
@@ -315,9 +310,7 @@ function writeInitialSetupData() {
     dataType: 'application/json'
     });
   });
-
   event.preventDefault();
-
 };
 
 
