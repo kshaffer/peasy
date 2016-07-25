@@ -2,16 +2,14 @@
 
   $credentials = json_decode($_POST['data']);
   if(isset($credentials->action) && $credentials->action == "authenticate") {
-    $df = fopen('user_db/db.json', 'r');
-    $datafile = fread($df, filesize('user_db/db.json'));
+    $df = fopen('config/user_db.json', 'r');
+    $datafile = fread($df, filesize('config/user_db.json'));
     $auth = json_decode($datafile);
     $credentialsAreValid = array("logged_in" => False);
     if($auth->username == $credentials->username && $auth->password == $credentials->password) {
       $credentialsAreValid["logged_in"] = True;
     }
   }
-
-  //echo json_encode($credentialsAreValid);
 
   require_once('vendor/autoload.php');
   use Zend\Config\Factory;
@@ -22,7 +20,11 @@
    * Application setup, database connection, data sanitization and user
    * validation routines are here.
    */
-  $config = Factory::fromFile('config/config.php', true); // Create a Zend Config Object
+   $df = file_get_contents('config/user_db.json');
+   $config_data = json_decode($df, true);
+   $raw_key = $config_data['key'];
+   $algorithm = $config_data['algorithm'];
+   $server_name = $config_data['serverName'];
 
   if ($credentialsAreValid["logged_in"]) {
 
@@ -30,7 +32,7 @@
       $issuedAt   = time();
       $notBefore  = $issuedAt - 1;             //Adding 5 seconds
       $expire     = $notBefore + 3600;            // Adding 20 minutes
-      $serverName = $config->serverName; // Retrieve the server name from config file
+      $serverName = $server_name; // Retrieve the server name from config file
 
       /*
        * Create the token as an array
@@ -58,7 +60,7 @@
      * keep it secure! You'll need the exact key to verify the
      * token later.
      */
-    $secretKey = base64_decode($config->get('jwt')->get('key'));
+    $secretKey = base64_decode($raw_key);
 
     /*
      * Encode the array to a JWT string.

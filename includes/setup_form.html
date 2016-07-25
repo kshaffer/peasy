@@ -1,0 +1,10 @@
+<form name="setupform" method="post" action="editsetup">
+  Title of website<br/><input type="text" class="editable" name="metatitle" id="metatitle" placeholder="Project Peasy" style="width: 100%"></input><br/><br/>
+  Author/creator<br/><input type="text" class="editable" name="metaauthor" id="metaauthor" placeholder="Kris Shaffer" style="width: 100%"></input><br/><br/>
+  Contact email<br/><input type="text" class="editable" name="metaemail" id="metaemail" placeholder="kris.shaffer@tutanota.de" style="width: 100%"></input><br/><br/>
+  Create login account<br/><input type="text" class="editable" name="metauser" id="metauser" placeholder="login username" style="width: 100%;"></input><br/><br/>
+  <input type="password" class="editable" name="metapass" id="metapass" placeholder="login password" style="width: 100%;"></input><p><em>This platform places no restrictions on the form of the password, but <strong>long</strong> passwords that are hard to guess and that you don't use on any other sites are highly recommended. Entire lines of poetry/lyrics with no spaces and with each word capitalized are easy to remember, hard to guess, and readily withstand "brute force" attacks from malicious code. For example,</em> TheresALadyWhosSureAllThatGlittersIsGold.</p>
+  <p>When you click "Submit" below, a site will be built that is a clone of <a href="https://peasy.pushpullfork.com">https://peasy.pushpullfork.com</a>. If you would like to clone a different site <em>that is build with this same platform</em>, enter the complete URL below. Otherwise, keep the default option.</p>
+  <input type="text" class="editable" name="metaclone" id="metaclone" placeholder="https://peasy.pushpullfork.com" style="width: 100%;"></input><br/><br/>
+  <button type="submit" onclick="return writeInitialSetupData()">Submit</button>
+</form>

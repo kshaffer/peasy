@@ -3,7 +3,7 @@ function getHeaderAndFooter() {
   $.getJSON('meta.json', function (data) {
     var site = data;
     document.getElementById('site-title').innerHTML = site.title;
-    document.getElementById('page-footer').innerHTML = (site.footer_copyright + ' ' + site.author + '. ' + site.footer_license);
+    document.getElementById('page-footer').innerHTML = (site.footer_copyright + site.copyright_year + ' ' + site.author + '. ' + site.footer_license);
   });
 };
 
@@ -22,20 +22,25 @@ function getLoggedInNavbar() {
 };
 
 function getIndexContent() {
-  // load syllabus data from site_content.json and populate page
-  $.getJSON('site_content.json', function (data) {
-    var siteContent = data;
-    if (sessionStorage.token) {
-      getLoggedInNavbar();
+  $.getJSON('meta.json', function (data) {
+    if (data.is_setup === true) {
+
+      // load syllabus data from site_content.json and populate page
+      $.getJSON('site_content.json', function (data) {
+        var siteContent = data;
+        if (sessionStorage.token) {
+          getLoggedInNavbar();
+        } else {
+          getLoggedOutNavbar();
+        };
+        document.getElementById('page-heading').innerHTML = siteContent.title;
+        document.getElementById('page-subheading').innerHTML = siteContent.author;
+        document.getElementById('page-content').innerHTML = siteContent.content;
+        document.getElementById('content-edit-label').innerHTML = '';
+      });
     } else {
-      getLoggedOutNavbar();
+      getSetupForm();
     };
-    document.getElementById('page-heading').innerHTML = siteContent.title;
-    document.getElementById('page-subheading').innerHTML = siteContent.author;
-    document.getElementById('page-content').innerHTML = siteContent.content;
-    document.getElementById('title-edit-label').innerHTML = '';
-    document.getElementById('author-edit-label').innerHTML = '';
-    document.getElementById('content-edit-label').innerHTML = '';
   });
 };
 
@@ -50,12 +55,7 @@ function getEditForm() {
       document.getElementById('page-heading').innerHTML = '';
       document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = editFormContent.form_content;
-      //document.getElementById('title-edit-label').innerHTML = 'title:';
-      //document.getElementById('author-edit-label').innerHTML = 'author:';
-      //document.getElementById('content-edit-label').innerHTML = 'content:';
       document.getElementById('content-edit-label').innerHTML = 'click to edit:';
-      document.getElementById('title-edit-label').style = 'text-align: right;';
-      document.getElementById('author-edit-label').style = 'text-align: right;';
       document.getElementById('content-edit-label').style = 'text-align: right; color: #7B7D7D;';
 
       // load page data from site_content.json and populate form
@@ -208,6 +208,117 @@ function getLoginForm() {
   });
 };
 
+
+// when site is not yet setup, opens setup form,
+// loads data from meta.json, and edits/adds meta.json data
+function getSetupForm() {
+  $.ajax({
+    type: 'GET',
+    url: 'includes/setup_form.html',
+    success: function (data) {
+      var setupFormContent = data;
+      document.getElementById('page-heading').innerHTML = 'Peasy Site Setup';
+      document.getElementById('page-subheading').innerHTML = '';
+      document.getElementById('page-content').innerHTML = setupFormContent;
+      document.getElementById('metaclone').innerHTML = 'https://peasy.pushpullfork.com';
+    }
+  });
+};
+
+
+function writeInitialSetupData() {
+  var siteurl = (document.setupform.metaclone.value + '/api.php');
+  var title = document.setupform.metatitle.value;
+  var author = document.setupform.metaauthor.value;
+  var email = document.setupform.metaemail.value;
+  var user = document.setupform.metauser.value;
+  var pass = document.setupform.metapass.value;
+
+  // write setup form data to meta.json
+  $.get('meta.json', function (data) {
+    var post_object = {
+      "title": title,
+      "author": author,
+      "footer_copyright": "<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
+      "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.",
+      "copyright_year": "2016",
+      "contact_email": email,
+      "is_setup": true,
+      "index_feature_image": "",
+      "index_feature_image_credit": "",
+      "url": window.location.href,
+      "platform": "peasy",
+      "version": "alpha"
+    }
+    var post_object_string = JSON.stringify(post_object);
+
+    // write site content to file
+
+    $.ajax({
+    type: 'POST',
+    url: './save_meta.php',
+    data: { data: post_object_string },
+    success: console.log('Site meta data created.'),
+    dataType: 'application/json'
+    });
+    event.preventDefault();
+  });
+
+  // write new login data to user_db.json
+  $.get('config/user_db.json', function (data) {
+    var login_object = {
+      "username": user,
+      "password": pass
+    }
+    var login_object_string = JSON.stringify(login_object);
+
+    // write site content to file
+
+    $.ajax({
+    type: 'POST',
+    url: './save_login.php',
+    data: { data: login_object_string },
+    success: console.log('User account created.'),
+    dataType: 'application/json'
+    });
+    event.preventDefault();
+  });
+
+  // load site data from site to clone
+  $.get(siteurl, function (data) {
+
+      var site_to_clone = JSON.parse(data);
+
+      var title = site_to_clone.title;
+      var author = site_to_clone.author;
+      var content = site_to_clone.content;
+
+    var post_object = {
+      "index": "1",
+      "timestamp": "",
+      "feature_image": "",
+      "image_credit_url": "",
+      "image_credit_photographer": "",
+      "author": author,
+      "title": title,
+      "content": content
+    }
+    var post_object_string = JSON.stringify(post_object);
+
+    // write site content to file
+
+    $.ajax({
+    type: 'POST',
+    url: './save_file.php',
+    data: { data: post_object_string },
+    success: getIndexContent(),
+    dataType: 'application/json'
+    });
+  });
+
+  event.preventDefault();
+
+};
 
 
 // The following code can be used as the skeleton of a blog format, rather than a single page

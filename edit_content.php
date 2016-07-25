@@ -29,16 +29,19 @@ if ($request->isGet()) {
        */
       if ($jwt) {
           try {
-            $config = Factory::fromFile('config/config.php', true);
+            $df = file_get_contents('config/user_db.json');
+            $config_data = json_decode($df, true);
+            $raw_key = $config_data['key'];
+            $algorithm = $config_data['algorithm'];
+            $server_name = $config_data['serverName'];
+
             /*
              * decode the jwt using the key from config
              */
-            // $secretKey = base64_decode(strtr($config->get('jwt')->get('key'), '-_', '+/'));
-            $secretKey = base64_decode($config->get('jwt')->get('key'));
-            $token = JWT::decode($jwt, $secretKey, [$config->get('jwt')->get('algorithm')]);
+            $secretKey = base64_decode($raw_key);
+            $token = JWT::decode($jwt, $secretKey, [$algorithm]);
             $df = fopen('includes/edit_form.html', 'r');
             $asset = fread($df, filesize('includes/edit_form.html'));
-            //echo $asset;
 
             /*
              * return protected asset
