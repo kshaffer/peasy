@@ -268,10 +268,10 @@ function getSetupForm() {
     url: 'includes/setup_form.html',
     success: function (data) {
       var setupFormContent = data;
-      document.getElementById('page-heading').innerHTML = 'Peasy Site Setup';
+      document.getElementById('page-heading').innerHTML = 'Rooibos Site Setup';
       document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = setupFormContent;
-      document.getElementById('metaclone').innerHTML = 'https://peasy.pushpullfork.com';
+      document.getElementById('metaclone').innerHTML = 'https://rooibos.pushpullfork.com';
       secret_key = getNewSecretKey();
     }
   });
@@ -305,7 +305,7 @@ function writeInitialSetupData() {
     "contact_email": email,
     "copyright_year": "2016",
     "url": window.location.href,
-    "platform": "peasy",
+    "platform": "rooibos",
     "version": "alpha",
     "footer_copyright": "<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
     "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.",

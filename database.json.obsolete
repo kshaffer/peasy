@@ -1,11 +1,11 @@
 var site = {
-  "title": "Peasy: a test blog platform",
+  "title": "Rooibos: a test blog platform",
   "author": "Kris Shaffer",
   "footer_copyright": "",
   "tagline": "",
   "index_feature_image": "",
   "index_feature_image_credit": "",
-  "url": "https://peasy.pushpullfork.com/"
+  "url": "https://rooibos.pushpullfork.com/"
   //"url": "file:///C:/Users/jstommel-admin/repos/supersimpleblog/"
   };
 
@@ -19,7 +19,7 @@ var content = {
           "image_credit_photographer": "",
           "title": "A super-simple platform",
           "author": "Kris Shaffer",
-          "text": "<p>Welcome to my newest project, a streamlined content management system based on Javascript and JSON (rather than PHP and MySQL), Codename Peasy (as in easy). The goal is to create a platform that...</p><ul><li>makes it super-easy to just put something (like a syllabus or an artist's bio) up on the web.</li><li>gives a blogger something that is as easy to use as Medium.</li><li>is open-source.</li><li>makes creating, posting, remixing, and networking open educational resources (OER) simple.</li></ul><p>For now, I am using Bootstrap for the theming to make things easy. But ultimately, this platform will have its own CSS theming engine that will be (almost) as easy to customize as the platform (hopefully) will be to use as an author.</p><p>Enjoy!</p>"
+          "text": "<p>Welcome to my newest project, a streamlined content management system based on Javascript and JSON (rather than PHP and MySQL), Codename Rooibos (as in the tea). The goal is to create a platform that...</p><ul><li>makes it super-easy to just put something (like a syllabus or an artist's bio) up on the web.</li><li>gives a blogger something that is as easy to use as Medium.</li><li>is open-source.</li><li>makes creating, posting, remixing, and networking open educational resources (OER) simple.</li></ul><p>For now, I am using Bootstrap for the theming to make things easy. But ultimately, this platform will have its own CSS theming engine that will be (almost) as easy to customize as the platform (hopefully) will be to use as an author.</p><p>Enjoy!</p>"
     },
     {
           "index": "2",
