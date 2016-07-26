@@ -110,7 +110,7 @@ function collectContent() {
       type: 'POST',
       url: './save_file.php',
       data: { data: post_object_string },
-      success: getPageContent(current_page),
+      success: setTimeout(function() { getPageContent(current_page) }, 200),
       dataType: 'application/json'
     });
   });
@@ -236,8 +236,7 @@ function loginToSite() {
   success: function(returnedData) {
     //alert(text);
     sessionStorage.token = returnedData.jwt;
-    getEditForm();
-    getLoggedInNavbar();
+    getPageContent('Home');
   },
   error: function (jqXHR, textStatus, errorThrown) {
               delete sessionStorage.token;
