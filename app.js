@@ -94,7 +94,6 @@ function collectContent() {
   var title = allContent.editContentTitle.value;
   var author = allContent.editContentAuthor.value;
   var content = bodyContentInput;
-
   var post_object = {
     "index": "1",
     "timestamp": "",
@@ -105,6 +104,7 @@ function collectContent() {
     "title": title,
     "content": content
   }
+
   var post_object_string = JSON.stringify(post_object);
 
   // write form content to file
