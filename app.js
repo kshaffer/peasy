@@ -147,7 +147,7 @@ function loginToSite() {
   },
   error: function (jqXHR, textStatus, errorThrown) {
               delete sessionStorage.token;
-              alert("jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown);
+              alert("Login error. Please check your username and password." /* + "jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown */ );
             }
 });
 

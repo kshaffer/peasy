@@ -4,8 +4,6 @@ header('Custom-Header: Own-Data');
 header('Access-Control-Expose-Headers: Custom-Header');
 //chdir(dirname(__DIR__));
 require_once('vendor/autoload.php');
-use Zend\Config\Config;
-use Zend\Config\Factory;
 use Zend\Http\PhpEnvironment\Request;
 use Firebase\JWT\JWT;
 /*
@@ -38,8 +36,6 @@ if ($request->isGet()) {
             /*
              * decode the jwt using the key from config
              */
-            //$secretKey = base64_decode($config->get('jwt')->get('key'));
-            //$token = JWT::decode($jwt, $secretKey, [$config->get('jwt')->get('algorithm')]);
             $secretKey = base64_decode($raw_key);
             $token = JWT::decode($jwt, $secretKey, [$algorithm]);
             $df = fopen('includes/import_form.html', 'r');

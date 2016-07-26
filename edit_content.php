@@ -4,8 +4,6 @@ header('Custom-Header: Own-Data');
 header('Access-Control-Expose-Headers: Custom-Header');
 //chdir(dirname(__DIR__));
 require_once('vendor/autoload.php');
-use Zend\Config\Config;
-use Zend\Config\Factory;
 use Zend\Http\PhpEnvironment\Request;
 use Firebase\JWT\JWT;
 /*
