@@ -1,3 +1,5 @@
+var current_page = 'Home';
+
 function getHeaderAndFooter() {
   // load site data from meta.json and populate banner
   $.getJSON('site_content.json', function (data) {
@@ -7,32 +9,38 @@ function getHeaderAndFooter() {
   });
 };
 
-function getLoggedOutNavbar() {
-  $.get('includes/navbar_loggedout.html', function (data) {
+function getNavbar() {
+  $.get('includes/navbar_all.html', function (data) {
     var navbarContent = data;
-    document.getElementById('navbar').innerHTML = navbarContent;
+    $.getJSON('site_content.json', function (data) {
+      var site = data.meta;
+      var pages = data.pages;
+      var navbarLinks = '';
+      for (page_short_title in pages) {
+        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getPageContent('" + page_short_title + "')\">" + page_short_title + "</a></li>\n";
+        console.log(page_short_title);
+      };
+      if (sessionStorage.token) {
+        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
+      } else {
+        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getLoginForm()\">Login</a></li><li class=\"active\"><a id=\"contact-email\" href=\"http://kris.shaffermusic.com/contact/\">Contact</a></li><li class=\"active\">";
+      };
+      document.getElementById('navbar').innerHTML = navbarContent;
+      document.getElementById('navbar-links').innerHTML = navbarLinks;
+      document.getElementById('contact-email').href = 'mailto:' + site.contact_email;
+    });
   });
 };
 
-function getLoggedInNavbar() {
-  $.get('includes/navbar_loggedin.html', function (data) {
-    var navbarContent = data;
-    document.getElementById('navbar').innerHTML = navbarContent;
-  });
-};
-
+/*
 function getIndexContent() {
   $.getJSON('site_content.json', function (data) {
     if (data.meta.is_setup === true) {
+      getNavbar();
 
-      // load syllabus data from site_content.json and populate page
+      // load site data from site_content.json and populate page
       $.getJSON('site_content.json', function (data) {
         var siteContent = data.pages.Home;
-        if (sessionStorage.token) {
-          getLoggedInNavbar();
-        } else {
-          getLoggedOutNavbar();
-        };
         document.getElementById('page-heading').innerHTML = siteContent.title;
         document.getElementById('page-subheading').innerHTML = siteContent.author;
         document.getElementById('page-content').innerHTML = siteContent.content;
@@ -41,6 +49,28 @@ function getIndexContent() {
     } else {
       getSetupForm();
     };
+  });
+};
+*/
+
+// load syllabus data from site_content.json and populate page
+function getPageContent(pageName) {
+  $.getJSON('site_content.json', function (data) {
+    if (data.meta.is_setup === true) {
+      getNavbar();
+      var sitePages = data.pages;
+      if (pageName in sitePages) {
+        var siteContent = data.pages[pageName];
+        current_page = pageName;
+      } else {
+        var siteContent = data.pages.Home;
+        current_page = 'Home';
+      }
+      document.getElementById('page-heading').innerHTML = siteContent.title;
+      document.getElementById('page-subheading').innerHTML = siteContent.author;
+      document.getElementById('page-content').innerHTML = siteContent.content;
+      document.getElementById('content-edit-label').innerHTML = '';
+    }
   });
 };
 
@@ -60,7 +90,7 @@ function getEditForm() {
 
       // load page data from site_content.json and populate form
       $.getJSON('site_content.json', function (data) {
-        var siteContent = data.pages.Home;
+        var siteContent = data.pages[current_page];
         document.getElementById('editContentTitle').innerHTML = siteContent.title;
         document.getElementById('editContentAuthor').innerHTML = siteContent.author;
         document.getElementById('editPageContent').innerHTML = siteContent.content;
@@ -81,7 +111,7 @@ function collectContent() {
     var allContent = editor.serialize();
     var title = allContent.editContentTitle.value;
     var author = allContent.editContentAuthor.value;
-    var short_title = "Home";
+    var short_title = current_page;
     var content = bodyContentInput;
     var post_object = {
       "timestamp": "",
@@ -101,7 +131,7 @@ function collectContent() {
       type: 'POST',
       url: './save_file.php',
       data: { data: post_object_string },
-      success: getIndexContent(),
+      success: getPageContent(current_page),
       dataType: 'application/json'
     });
   });
@@ -189,8 +219,8 @@ function loginToSite() {
 
 function logout() {
   delete sessionStorage.token;
-  getLoggedOutNavbar();
-  getIndexContent();
+  getNavbar();
+  getPageContent('Home');
 };
 
 function getLoginForm() {
@@ -266,10 +296,10 @@ function writeInitialSetupData() {
   // load remote data to import
   $.get(siteImportURL, function (data) {
     var imported_data = JSON.parse(data);
-    var site_import_content = imported_data.pages;
+    var site_import_pages = imported_data.pages;
     var site_import_posts = imported_data.posts;
     var post_object = {
-      "meta": site_meta_data,
+      "meta": site_meta_object,
       "pages": site_import_pages,
       "posts": site_import_posts
     };
@@ -281,7 +311,7 @@ function writeInitialSetupData() {
     url: './save_file.php',
     data: { data: post_object_string },
     dataType: 'application/json',
-    success: getIndexContent()
+    success: getPageContent('Home')
     });
   });
   event.preventDefault();
