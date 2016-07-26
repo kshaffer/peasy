@@ -21,7 +21,7 @@ function getNavbar() {
         console.log(page_short_title);
       };
       if (sessionStorage.token) {
-        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
+        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
       } else {
         navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getLoginForm()\">Login</a></li><li class=\"active\"><a id=\"contact-email\" href=\"http://kris.shaffermusic.com/contact/\">Contact</a></li><li class=\"active\">";
       };
@@ -31,27 +31,6 @@ function getNavbar() {
     });
   });
 };
-
-/*
-function getIndexContent() {
-  $.getJSON('site_content.json', function (data) {
-    if (data.meta.is_setup === true) {
-      getNavbar();
-
-      // load site data from site_content.json and populate page
-      $.getJSON('site_content.json', function (data) {
-        var siteContent = data.pages.Home;
-        document.getElementById('page-heading').innerHTML = siteContent.title;
-        document.getElementById('page-subheading').innerHTML = siteContent.author;
-        document.getElementById('page-content').innerHTML = siteContent.content;
-        document.getElementById('content-edit-label').innerHTML = '';
-      });
-    } else {
-      getSetupForm();
-    };
-  });
-};
-*/
 
 // load syllabus data from site_content.json and populate page
 function getPageContent(pageName) {
@@ -138,6 +117,53 @@ function collectContent() {
   event.preventDefault();
 };
 
+function getNewPageForm() {
+  $.ajax({
+    headers: { 'Authorization': ('Bearer ' + sessionStorage.token)},
+    type: 'GET',
+    url: 'new_page_content.php',
+    success: function (data) {
+      var editFormContent = data;
+      document.getElementById('page-heading').innerHTML = '';
+      document.getElementById('page-subheading').innerHTML = '';
+      document.getElementById('page-content').innerHTML = editFormContent.form_content;
+      document.getElementById('content-edit-label').innerHTML = '';
+    }
+  });
+};
+
+// collect document information from edit form`and write to database
+function createNewPage() {
+  $.getJSON('site_content.json', function (data) {
+    var site_content = data;
+    var title = document.newPageForm.pagetitle.value;
+    var author = document.newPageForm.pageauthor.value;
+    var short_title = document.newPageForm.shortlink.value;
+    var post_object = {
+      "timestamp": "",
+      "feature_image": "",
+      "image_credit_url": "",
+      "image_credit_photographer": "",
+      "author": author,
+      "title": title,
+      "content": ''
+    };
+    site_content.pages[short_title] = post_object;
+
+    var post_object_string = JSON.stringify(site_content);
+
+    // write form content to file
+    $.ajax({
+      type: 'POST',
+      url: './save_file.php',
+      data: { data: post_object_string },
+      success: getPageContent(current_page),
+      dataType: 'application/json'
+    });
+  });
+  event.preventDefault();
+};
+
 function getImportForm() {
   // get navbar from navbar.html and load into html
   $.ajax({
@@ -163,23 +189,27 @@ function editFromURL() {
     // load remote data to import
     $.get(siteImportURL, function (data) {
       var imported_data = JSON.parse(data);
-      var site_import_pages = imported_data.pages;
-      var site_import_posts = imported_data.posts;
-      var post_object = {
-        "meta": site_meta_data,
-        "pages": site_import_pages,
-        "posts": site_import_posts
-      }
-      var post_object_string = JSON.stringify(post_object);
+      if (imported_data.meta.platform === "rooibos") {
+        var site_import_pages = imported_data.pages;
+        var site_import_posts = imported_data.posts;
+        var post_object = {
+          "meta": site_meta_data,
+          "pages": site_import_pages,
+          "posts": site_import_posts
+        }
+        var post_object_string = JSON.stringify(post_object);
 
-      // write form content to file
-      $.ajax({
-      type: 'POST',
-      url: './save_file.php',
-      data: { data: post_object_string },
-      success: getEditForm(),
-      dataType: 'application/json'
-      });
+        // write form content to file
+        $.ajax({
+        type: 'POST',
+        url: './save_file.php',
+        data: { data: post_object_string },
+        success: getEditForm(),
+        dataType: 'application/json'
+        });
+      } else {
+        alert('The platform on ' + siteImportURL + ' is not supported.');
+      };
     });
   });
   event.preventDefault();
