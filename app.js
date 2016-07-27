@@ -49,6 +49,8 @@ function getPageContent(pageName) {
       document.getElementById('page-heading').innerHTML = siteContent.title;
       document.getElementById('page-subheading').innerHTML = siteContent.author;
       document.getElementById('page-content').innerHTML = siteContent.content;
+    } else {
+      getSetupForm();
     }
   });
 };
