@@ -1,8 +1,8 @@
-/*! 
+/*!
  * medium-editor-insert-plugin v2.3.3 - jQuery insert plugin for MediumEditor
  *
  * http://linkesch.com/medium-editor-insert-plugin
- * 
+ *
  * Copyright (c) 2014 Pavel Linkesch (http://linkesch.com)
  * Released under the MIT license
  */
@@ -102,7 +102,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handl
 
   return "<div class=\"medium-insert-embeds\" contenteditable=\"false\">\n	<figure>\n		<div class=\"medium-insert-embed\">\n			"
     + ((stack1 = ((helper = (helper = helpers.html || (depth0 != null ? depth0.html : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"html","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-    + "\n		</div>\n	</figure>\n	<div class=\"medium-insert-embeds-overlay\"></div>\n</div>";
+    + "\n		</div>\n	</figure>";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -642,11 +642,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         if ($p.length) {
             if (activeAddon) {
-                position.left = $p.offset().left + $p.width() - $buttons.find('.medium-insert-buttons-show').width() - 10;
-                position.top = $p.offset().top + $p.height() - 20 + ($lastCaption.length ? -$lastCaption.height() - parseInt($lastCaption.css('margin-top'), 10) : 10);
+                position.left = $p.position().left + $p.width() - $buttons.find('.medium-insert-buttons-show').width() - 10;
+                position.top = $p.position().top + $p.height() -10 + ($lastCaption.length ? -$lastCaption.height() - parseInt($lastCaption.css('margin-top'), 10) : 10);
             } else {
-                position.left = $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons button:first').css('margin-left'), 10);
-                position.top = $p.offset().top;
+                position.left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons button:first').css('margin-left'), 10);
+                position.top = $p.position().top + 10;
             }
 
             if (elementsContainerAbsolute) {
@@ -655,7 +655,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             }
 
             if (this.$el.hasClass('medium-editor-placeholder') === false && position.left < 0) {
-                position.left = $p.offset().left;
+                position.left = $p.position().left;
 
                 if (elementsContainerAbsolute) {
                     position.left -= elementsContainerBoundary.left;
@@ -923,7 +923,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this.$el
             .on('keyup click paste', $.proxy(this, 'togglePlaceholder'))
             .on('keydown', $.proxy(this, 'processLink'))
-            .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'))
+            //.on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'))
             .on('contextmenu', '.medium-insert-embeds-placeholder', $.proxy(this, 'fixRightClickOnPlaceholder'));
 
         if (this.options.parseOnPaste) {

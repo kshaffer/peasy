@@ -1,8 +1,8 @@
-/*! 
+/*!
  * medium-editor-insert-plugin v2.3.3 - jQuery insert plugin for MediumEditor
  *
  * http://linkesch.com/medium-editor-insert-plugin
- * 
+ *
  * Copyright (c) 2014 Pavel Linkesch (http://linkesch.com)
  * Released under the MIT license
  */
