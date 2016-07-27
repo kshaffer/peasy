@@ -74,6 +74,11 @@ function getEditForm() {
         document.getElementById('editContentAuthor').innerHTML = siteContent.author;
         document.getElementById('editPageContent').innerHTML = siteContent.content;
         editor = new MediumEditor('.editable');
+        $(function () {
+          $('.editable').mediumInsert({
+            editor: editor
+          });
+        });
         editor.subscribe('editableInput', function (event, editable) {
           bodyContentInput = editable.innerHTML;
         });
