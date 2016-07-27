@@ -18,7 +18,6 @@ function getNavbar() {
       var navbarLinks = '';
       for (page_short_title in pages) {
         navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getPageContent('" + page_short_title + "')\">" + page_short_title + "</a></li>\n";
-        console.log(page_short_title);
       };
       if (sessionStorage.token) {
         navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
@@ -27,7 +26,9 @@ function getNavbar() {
       };
       document.getElementById('navbar').innerHTML = navbarContent;
       document.getElementById('navbar-links').innerHTML = navbarLinks;
-      document.getElementById('contact-email').href = 'mailto:' + site.contact_email;
+      if (!sessionStorage.token) {
+        document.getElementById('contact-email').href = 'mailto:' + site.contact_email;
+      }
     });
   });
 };
@@ -48,7 +49,8 @@ function getPageContent(pageName) {
       document.getElementById('page-heading').innerHTML = siteContent.title;
       document.getElementById('page-subheading').innerHTML = siteContent.author;
       document.getElementById('page-content').innerHTML = siteContent.content;
-      document.getElementById('content-edit-label').innerHTML = '';
+    } else {
+      getSetupForm();
     }
   });
 };
@@ -64,8 +66,6 @@ function getEditForm() {
       document.getElementById('page-heading').innerHTML = '';
       document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = editFormContent.form_content;
-      document.getElementById('content-edit-label').innerHTML = 'click to edit:';
-      document.getElementById('content-edit-label').style = 'text-align: right; color: #7B7D7D;';
 
       // load page data from site_content.json and populate form
       $.getJSON('site_content.json', function (data) {
@@ -74,6 +74,77 @@ function getEditForm() {
         document.getElementById('editContentAuthor').innerHTML = siteContent.author;
         document.getElementById('editPageContent').innerHTML = siteContent.content;
         editor = new MediumEditor('.editable');
+
+        $(function () {
+            $('.editable').mediumInsert({
+                editor: editor,
+                addons: {
+                    images: {
+                        uploadScript: null,
+                        deleteScript: null,
+                        captionPlaceholder: 'Type caption for image',
+                        fileUploadOptions: {
+                            url: 'upload.php',
+                            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+                        },
+                        styles: { // (object) Available image styles configuration
+                            wide: { // (object) Image style configuration. Key is used as a class name added to an image, when the style is selected (.medium-insert-images-wide)
+                            label: '<span class="fa fa-align-justify"></span>', // (string) A label for a style
+                            added: function ($el) {}, // (function) Callback function called after the style was selected. A parameter $el is a current active paragraph (.medium-insert-active)
+                            removed: function ($el) {} // (function) Callback function called after a different style was selected and this one was removed. A parameter $el is a current active paragraph (.medium-insert-active)
+                            },
+                            left: {
+                                label: '<span class="fa fa-align-left"></span>'
+                            },
+                            right: {
+                                label: '<span class="fa fa-align-right"></span>'
+                            },
+                            grid: {
+                                label: '<span class="fa fa-th"></span>'
+                            }
+                        },
+                        actions: null,
+                        messages: {
+                            acceptFileTypesError: 'This file is not in a supported format: ',
+                            maxFileSizeError: 'This file is too big: '
+                        }
+
+                    },
+                    embeds: { // (object) Embeds addon configuration
+                        label: '<span class="fa fa-youtube-play"></span>', // (string) A label for an embeds addon
+                        placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter', // (string) Placeholder displayed when entering URL to embed
+                        captions: true, // (boolean) Enable captions
+                        captionPlaceholder: 'Type caption (optional)', // (string) Caption placeholder
+                        oembedProxy: null, // (string/null) URL to oEmbed proxy endpoint, such as Iframely, Embedly or your own. You are welcome to use "http://medium.iframe.ly/api/oembed?iframe=1" for your dev and testing needs, courtesy of Iframely. *Null* will make the plugin use pre-defined set of embed rules without making server calls.
+                        styles: { // (object) Available embeds styles configuration
+                            wide: { // (object) Embed style configuration. Key is used as a class name added to an embed, when the style is selected (.medium-insert-embeds-wide)
+                                label: '<span class="fa fa-align-justify"></span>', // (string) A label for a style
+                                added: function ($el) {}, // (function) Callback function called after the style was selected. A parameter $el is a current active paragraph (.medium-insert-active)
+                                removed: function ($el) {} // (function) Callback function called after a different style was selected and this one was removed. A parameter $el is a current active paragraph (.medium-insert-active)
+                            },
+                            left: {
+                                label: '<span class="fa fa-align-left"></span>'
+                            },
+                            right: {
+                                label: '<span class="fa fa-align-right"></span>'
+                            }
+                        },
+                        actions: { // (object) Actions for an optional second toolbar
+                            remove: { // (object) Remove action configuration
+                                label: '<span class="fa fa-times"></span>', // (string) Label for an action
+                                clicked: function ($el) { // (function) Callback function called when an action is selected
+                                    var $event = $.Event('keydown');
+
+                                    $event.which = 8;
+                                    $(document).trigger($event);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
         editor.subscribe('editableInput', function (event, editable) {
           bodyContentInput = editable.innerHTML;
         });
