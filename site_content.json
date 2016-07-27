@@ -1,8 +1,28 @@
 {
-  "meta": {"title":"Project Rooibos","author":"Kris Shaffer","footer_copyright":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;","footer_license":"This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.","copyright_year":"2016","contact_email":"kris.shaffer@tutanota.de","is_setup":true,"index_feature_image":"","index_feature_image_credit":"","url":"https://rooibos.pushpullfork.com/","platform":"rooibos","version":"alpha"},
+  "meta": {
+    "title":"",
+    "author":"",
+    "footer_copyright":"<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
+    "footer_license":"This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.",
+    "copyright_year":"2016",
+    "contact_email":"",
+    "is_setup":false,
+    "index_feature_image":"",
+    "index_feature_image_credit":"",
+    "url":"",
+    "platform":"rooibos",
+    "version":"alpha"
+  },
   "pages": {
-    "Home": {"timestamp":"","feature_image":"","image_credit_url":"","image_credit_photographer":"","author":"Kris Shaffer","title":"Rooibos - open by default", "content":"<h2>This is the home page.</h2>"},
-    "About": {"timestamp":"","feature_image":"","image_credit_url":"","image_credit_photographer":"","author":"Kris Shaffer","title":"Rooibos - open by default", "content":"<h2>This is the about page.</h2><p>Rooibos is an open-by-default platform."}
+    "Home": {
+      "timestamp":"",
+      "feature_image":"",
+      "image_credit_url":"",
+      "image_credit_photographer":"",
+      "author":"",
+      "title":"",
+      "content":""
+    }
   },
   "posts": {
 
