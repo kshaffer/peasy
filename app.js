@@ -70,9 +70,9 @@ function getEditForm() {
       // load page data from site_content.json and populate form
       $.getJSON('site_content.json', function (data) {
         var siteContent = data.pages[current_page];
+        document.getElementById('editPageContent').innerHTML = siteContent.content;
         document.getElementById('editContentTitle').innerHTML = siteContent.title;
         document.getElementById('editContentAuthor').innerHTML = siteContent.author;
-        document.getElementById('editPageContent').innerHTML = siteContent.content;
         editor = new MediumEditor('.editable');
 
         $(function () {
@@ -158,19 +158,23 @@ function getEditForm() {
 function collectContent() {
   $.getJSON('site_content.json', function (data) {
     var site_content = data;
+    console.log(site_content.pages[current_page].author);
+    console.log(site_content.pages[current_page].title);
+    var author = site_content.pages[current_page].author;
+    var title = site_content.pages[current_page].title;
     var allContent = editor.serialize();
-    var title = allContent.editContentTitle.value;
-    var author = allContent.editContentAuthor.value;
+    //var title = allContent.editContentTitle.value;
+    //var author = allContent.editContentAuthor.value;
     var short_title = current_page;
-    var content = bodyContentInput;
+    var content = allContent.editPageContent.value;
     var post_object = {
       "timestamp": "",
       "feature_image": "",
       "image_credit_url": "",
       "image_credit_photographer": "",
+      "content": content,
       "author": author,
-      "title": title,
-      "content": content
+      "title": title
     };
     site_content.pages[short_title] = post_object;
 
@@ -181,7 +185,7 @@ function collectContent() {
       type: 'POST',
       url: './save_file.php',
       data: { data: post_object_string },
-      success: setTimeout(function() { getPageContent(current_page) }, 200),
+      success: setTimeout(function() { getPageContent(current_page) }, 300),
       dataType: 'application/json'
     });
   });
@@ -198,7 +202,6 @@ function getNewPageForm() {
       document.getElementById('page-heading').innerHTML = '';
       document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = editFormContent.form_content;
-      document.getElementById('content-edit-label').innerHTML = '';
     }
   });
 };
@@ -210,6 +213,7 @@ function createNewPage() {
     var title = document.newPageForm.pagetitle.value;
     var author = document.newPageForm.pageauthor.value;
     var short_title = document.newPageForm.shortlink.value;
+    current_page = short_title;
     var post_object = {
       "timestamp": "",
       "feature_image": "",
@@ -228,7 +232,7 @@ function createNewPage() {
       type: 'POST',
       url: './save_file.php',
       data: { data: post_object_string },
-      success: getPageContent(current_page),
+      success: setTimeout(function() { getEditForm() }, 200),
       dataType: 'application/json'
     });
   });
@@ -411,7 +415,7 @@ function writeInitialSetupData() {
     url: './save_file.php',
     data: { data: post_object_string },
     dataType: 'application/json',
-    success: getPageContent('Home')
+    success: setTimeout(function() { getPageContent('Home') }, 200)
     });
   });
   event.preventDefault();

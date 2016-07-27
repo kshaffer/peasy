@@ -642,10 +642,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         if ($p.length) {
             if (activeAddon) {
-                position.left = $p.position().left + $p.width() - $buttons.find('.medium-insert-buttons-show').width() - 10;
+                position.left = $p.position().left + $p.width() - $buttons.find('.medium-insert-buttons-show').width() - 50;
                 position.top = $p.position().top + $p.height() -10 + ($lastCaption.length ? -$lastCaption.height() - parseInt($lastCaption.css('margin-top'), 10) : 10);
             } else {
-                position.left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons button:first').css('margin-left'), 10);
+                position.left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons button:first').css('margin-left'), 10) - 40;
                 position.top = $p.position().top + 10;
             }
 
@@ -655,7 +655,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             }
 
             if (this.$el.hasClass('medium-editor-placeholder') === false && position.left < 0) {
-                position.left = $p.position().left;
+                position.left = $p.position().left - 40;
 
                 if (elementsContainerAbsolute) {
                     position.left -= elementsContainerBoundary.left;
