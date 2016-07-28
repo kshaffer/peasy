@@ -5,7 +5,7 @@ function getHeaderAndFooter() {
   $.getJSON('site_content.json', function (data) {
     var site = data.meta;
     document.getElementById('site-title').innerHTML = site.title;
-    document.getElementById('page-footer').innerHTML = (site.footer_copyright + site.copyright_year + ' ' + site.author + '. ' + site.footer_license);
+    document.getElementById('page-footer').innerHTML = (site.footer_copyright + site.copyright_year + ' ' + site.author + '. ' + site.footer_license + '<br/>' + site.footer_attribution);
   });
 };
 
@@ -46,8 +46,12 @@ function getPageContent(pageName) {
         var siteContent = data.pages.Home;
         current_page = 'Home';
       }
-      document.getElementById('page-heading').innerHTML = siteContent.title;
-      document.getElementById('page-subheading').innerHTML = siteContent.author;
+      if (pageName === 'Home') {
+        document.getElementById('page-heading').innerHTML = data.meta.title;
+      } else {
+        document.getElementById('page-heading').innerHTML = siteContent.title;
+      }
+      //document.getElementById('page-subheading').innerHTML = siteContent.author;
       document.getElementById('page-content').innerHTML = siteContent.content;
     } else {
       getSetupForm();
@@ -64,7 +68,7 @@ function getEditForm() {
     success: function (data) {
       var editFormContent = data;
       document.getElementById('page-heading').innerHTML = '';
-      document.getElementById('page-subheading').innerHTML = '';
+      //document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = editFormContent.form_content;
 
       // load page data from site_content.json and populate form
@@ -200,7 +204,7 @@ function getNewPageForm() {
     success: function (data) {
       var editFormContent = data;
       document.getElementById('page-heading').innerHTML = '';
-      document.getElementById('page-subheading').innerHTML = '';
+      //document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = editFormContent.form_content;
     }
   });
@@ -344,7 +348,7 @@ function getSetupForm() {
     success: function (data) {
       var setupFormContent = data;
       document.getElementById('page-heading').innerHTML = 'Rooibos Site Setup';
-      document.getElementById('page-subheading').innerHTML = '';
+      //document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = setupFormContent;
       document.getElementById('metaclone').innerHTML = 'https://rooibos.pushpullfork.com';
       secret_key = getNewSecretKey();
@@ -360,6 +364,7 @@ function getNewSecretKey() {
 
 function writeInitialSetupData() {
   var siteImportURL = (document.setupform.metaclone.value + '/api.php');
+  var siteImportURL_root = document.setupform.metaclone.value;
   var title = document.setupform.metatitle.value;
   var author = document.setupform.metaauthor.value;
   var email = document.setupform.metaemail.value;
@@ -373,6 +378,20 @@ function writeInitialSetupData() {
     "serverName": window.location.href
   }
   var login_object_string = JSON.stringify(login_object);
+
+  // write new login data to user_db.json
+  $.ajax({
+    type: 'POST',
+    url: './save_login.php',
+    data: { data: login_object_string },
+    dataType: 'application/json',
+    success: importFromURL(siteImportURL, siteImportURL_root, title, author, email)
+  });
+  event.preventDefault();
+};
+
+// fetch data for initial site import, then go to edit page
+function importFromURL(siteImportURL, siteImportURL_root, title, author, email) {
   var site_meta_object = {
     "is_setup": true,
     "title": title,
@@ -382,45 +401,42 @@ function writeInitialSetupData() {
     "url": window.location.href,
     "platform": "rooibos",
     "version": "alpha",
-    "footer_copyright": "<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
-    "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.",
+    "footer_copyright": "<p><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
+    "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>",
+    "footer_attribution": "<p>This site was originally cloned from " + "<a href=\"" + siteImportURL_root + "\">" + siteImportURL_root + "</a>.</p>",
     "index_feature_image": "",
     "index_feature_image_credit": ""
-  }
-
-  // write new login data to user_db.json
-  $.ajax({
-    type: 'POST',
-    url: './save_login.php',
-    data: { data: login_object_string },
-    dataType: 'application/json',
-    success: console.log('User account created.')
-  });
+  };
 
   // load remote data to import
   $.get(siteImportURL, function (data) {
     var imported_data = JSON.parse(data);
-    var site_import_pages = imported_data.pages;
-    var site_import_posts = imported_data.posts;
-    var post_object = {
-      "meta": site_meta_object,
-      "pages": site_import_pages,
-      "posts": site_import_posts
-    };
-    var post_object_string = JSON.stringify(post_object);
+    if (imported_data.meta.platform === "rooibos") {
+      var site_import_pages = imported_data.pages;
+      var site_import_posts = imported_data.posts;
+      console.log(imported_data.pages);
+      console.log(imported_data.posts);
+      var post_object = {
+        "meta": site_meta_object,
+        "pages": site_import_pages,
+        "posts": site_import_posts
+      }
+      var post_object_string = JSON.stringify(post_object);
 
-    // write form content to file
-    $.ajax({
-    type: 'POST',
-    url: './save_file.php',
-    data: { data: post_object_string },
-    dataType: 'application/json',
-    success: setTimeout(function() { getPageContent('Home') }, 200)
-    });
+      // write form content to file
+      $.ajax({
+      type: 'POST',
+      url: './save_file.php',
+      data: { data: post_object_string },
+      dataType: 'application/json',
+      success: setTimeout(function() { getPageContent('Home') }, 400)
+      });
+    } else {
+      alert('The platform on ' + siteImportURL + ' is not supported.');
+    };
   });
   event.preventDefault();
 };
-
 
 // The following code can be used as the skeleton of a blog format, rather than a single page
 // this is old code that needs tweaking in light of updates to the js
