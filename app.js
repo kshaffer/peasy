@@ -264,6 +264,7 @@ function editFromURL() {
     var site_content = data;
     var site_meta_data = site_content.meta;
     var siteImportURL = (document.importurl.siteImportURL.value + '/api.php');
+    var siteImportURL_root = document.importurl.siteImportURL.value;
 
     // load remote data to import
     $.get(siteImportURL, function (data) {
@@ -271,6 +272,7 @@ function editFromURL() {
       if (imported_data.meta.platform === "rooibos") {
         var site_import_pages = imported_data.pages;
         var site_import_posts = imported_data.posts;
+        site_meta_data.footer_attribution = "<p>This site was originally cloned from " + "<a href=\"" + siteImportURL_root + "\">" + siteImportURL_root + "</a>.</p>";
         var post_object = {
           "meta": site_meta_data,
           "pages": site_import_pages,
