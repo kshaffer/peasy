@@ -51,6 +51,7 @@ function getPageContentFromURL() {
         var siteContent = data.pages[pageName];
         current_page = pageName;
       } else if (window.location.pathname.replace('/', '') === 'new') {
+        var pageName = 'new';
         getNewPageForm();
       } else if (window.location.pathname.replace('/', '') === 'import') {
         getImportForm();
@@ -60,11 +61,13 @@ function getPageContentFromURL() {
       }
       if (pageName === 'Home') {
         document.getElementById('page-heading').innerHTML = data.meta.title;
+        document.getElementById('page-content').innerHTML = siteContent.content;
+      } else if (pageName === 'new' || pageName === 'New') {
+        document.getElementById('page-heading').innerHTML = 'Create a new page.';
       } else {
         document.getElementById('page-heading').innerHTML = siteContent.title;
+        document.getElementById('page-content').innerHTML = siteContent.content;
       }
-      //document.getElementById('page-subheading').innerHTML = siteContent.author;
-      document.getElementById('page-content').innerHTML = siteContent.content;
     } else {
       getSetupForm();
     }
@@ -234,7 +237,7 @@ function collectContent() {
       type: 'POST',
       url: './save_file.php',
       data: { data: post_object_string },
-      success: setTimeout(function() { getPageContent(current_page) }, 300),
+      success: getPageContent(current_page),
       dataType: 'application/json'
     });
   });
@@ -281,7 +284,7 @@ function createNewPage() {
       type: 'POST',
       url: './save_file.php',
       data: { data: post_object_string },
-      success: setTimeout(function() { getEditForm() }, 200),
+      success: getPageContent(current_page),
       dataType: 'application/json'
     });
   });
