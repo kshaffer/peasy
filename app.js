@@ -1,5 +1,9 @@
 var current_page = 'Home';
 
+String.prototype.toTitleCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
 function getHeaderAndFooter() {
   // load site data from meta.json and populate banner
   $.getJSON('site_content.json', function (data) {
@@ -17,10 +21,10 @@ function getNavbar() {
       var pages = data.pages;
       var navbarLinks = '';
       for (page_short_title in pages) {
-        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getPageContent('" + page_short_title + "')\">" + page_short_title + "</a></li>\n";
+        navbarLinks += "<li class=\"active\"><a href=\"" + page_short_title + "\">" + page_short_title + "</a></li>\n";
       };
       if (sessionStorage.token) {
-        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
+        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"new\">New Page</a></li><li class=\"active\"><a href=\"import\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
       } else {
         navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getLoginForm()\">Login</a></li><li class=\"active\"><a id=\"contact-email\" href=\"http://kris.shaffermusic.com/contact/\">Contact</a></li><li class=\"active\">";
       };
@@ -33,8 +37,45 @@ function getNavbar() {
   });
 };
 
+function getPageContentFromURL() {
+  $.getJSON('site_content.json', function (data) {
+    if (data.meta.is_setup === true) {
+      getNavbar();
+      var sitePages = data.pages;
+      if (window.location.pathname.replace('/', '') in sitePages) {
+        var pageName = window.location.pathname.replace('/', '');
+        var siteContent = data.pages[pageName];
+        current_page = pageName;
+      } else if (window.location.pathname.replace('/', '').toTitleCase() in sitePages) {
+        var pageName = window.location.pathname.replace('/', '').toTitleCase();
+        var siteContent = data.pages[pageName];
+        current_page = pageName;
+      } else if (window.location.pathname.replace('/', '') === 'new') {
+        getNewPageForm();
+      } else if (window.location.pathname.replace('/', '') === 'import') {
+        getImportForm();
+      } else {
+        var siteContent = data.pages.Home;
+        current_page = 'Home';
+      }
+      if (pageName === 'Home') {
+        document.getElementById('page-heading').innerHTML = data.meta.title;
+      } else {
+        document.getElementById('page-heading').innerHTML = siteContent.title;
+      }
+      //document.getElementById('page-subheading').innerHTML = siteContent.author;
+      document.getElementById('page-content').innerHTML = siteContent.content;
+    } else {
+      getSetupForm();
+    }
+  });
+};
+
 // load syllabus data from site_content.json and populate page
 function getPageContent(pageName) {
+  var siteRoot = window.location.hostname;
+  window.location.assign('https://' + siteRoot + '/' + pageName);
+  /*
   $.getJSON('site_content.json', function (data) {
     if (data.meta.is_setup === true) {
       getNavbar();
@@ -57,6 +98,7 @@ function getPageContent(pageName) {
       getSetupForm();
     }
   });
+  */
 };
 
 // opens edit page, loads data from database for editing
@@ -74,10 +116,15 @@ function getEditForm() {
       // load page data from site_content.json and populate form
       $.getJSON('site_content.json', function (data) {
         var siteContent = data.pages[current_page];
-        document.getElementById('editPageContent').innerHTML = siteContent.content;
-        document.getElementById('editContentTitle').innerHTML = siteContent.title;
-        document.getElementById('editContentAuthor').innerHTML = siteContent.author;
-        editor = new MediumEditor('.editable');
+        console.log(data.pages[current_page]);
+        console.log(data.pages[current_page].title);
+        console.log(data.pages[current_page].author);
+        document.getElementById('editPageContent').innerHTML = data.pages[current_page].content;
+        document.getElementById('editContentTitle').value = data.pages[current_page].title;
+
+        editor = new MediumEditor('.editable', {
+          placholder: false
+        });
 
         $(function () {
             $('.editable').mediumInsert({
@@ -149,13 +196,14 @@ function getEditForm() {
             });
         });
 
+        editor.addElements(document.getElementsByClassName('editable'));
         editor.subscribe('editableInput', function (event, editable) {
           bodyContentInput = editable.innerHTML;
         });
-        editor.addElements(document.getElementsByClassName('editable'));
       });
     }
   });
+  event.preventDefault();
 };
 
 // collect document information from edit form`and write to database
@@ -164,20 +212,17 @@ function collectContent() {
     var site_content = data;
     console.log(site_content.pages[current_page].author);
     console.log(site_content.pages[current_page].title);
-    var author = site_content.pages[current_page].author;
-    var title = site_content.pages[current_page].title;
     var allContent = editor.serialize();
-    //var title = allContent.editContentTitle.value;
-    //var author = allContent.editContentAuthor.value;
-    var short_title = current_page;
+    var title = document.inputNewTitle.title.value;
     var content = allContent.editPageContent.value;
+    var short_title = current_page;
     var post_object = {
       "timestamp": "",
       "feature_image": "",
       "image_credit_url": "",
       "image_credit_photographer": "",
+      "author": "",
       "content": content,
-      "author": author,
       "title": title
     };
     site_content.pages[short_title] = post_object;
@@ -439,6 +484,8 @@ function importFromURL(siteImportURL, siteImportURL_root, title, author, email) 
   });
   event.preventDefault();
 };
+
+
 
 // The following code can be used as the skeleton of a blog format, rather than a single page
 // this is old code that needs tweaking in light of updates to the js

@@ -1,14 +1,10 @@
-<!--
+
 <table>
   <tr>
     <td><h1 style="text-align: right; color: #7B7D7D; margin-right: 18px;">title:</h1></td>
-    <td><h1 type="text" name="title" id="editContentTitle" data-placeholder="Title" style="width: 100%"></h1></td>
+    <td><form name="inputNewTitle" method="post"><input type="text" name="title" id="editContentTitle" data-placeholder="Title" style="width: 100%"></input></form></td>
   </tr>
-  <tr>
-    <td><h2 style="text-align: right; color: #7B7D7D; margin-right: 18px;">author:</h2></td>
-    <td><h2 type="text" name="author" id="editContentAuthor" data-placeholder="Author" style="width: 100%"></h2></td>
-  </tr>
-  <tr><td></td><td><hr/><p style="text-align: right; color: #7B7D7D; margin-right: 18px;">edit the page content below...</p><hr/></td></tr>
+  <tr><td></td><td><hr/><p style="text-align: center; color: #7B7D7D; margin-right: 18px;">edit the page content below...</p><hr/></td></tr>
   <tr>
     <td style="vertical-align: top;"><h2 style="text-align: right; color: #7B7D7D; margin-right: 18px;">content:</h2></td>
     <td style="vertical-align: top;">
@@ -17,10 +13,11 @@
     </td>
   </tr>
 </table>
--->
 
+<!--
 <h1 type="text" name="title" id="editContentTitle" data-placeholder="Title" style="width: 100%"></h1>
 <h2 type="text" name="author" id="editContentAuthor" data-placeholder="Author" style="width: 100%"></h2>
 <hr/><p style="text-align: center; color: #7B7D7D; margin-right: 18px;">edit the page content below...</p><hr/>
 <div type="text" class="editable" name="postcontent" id="editPageContent" data-placeholder="Type content here." style="width: 100%; min-height: 30em"></div><br/><br/>
 <button type="submit" onclick="return collectContent()">Update</button> <button type="submit" onclick="return getPageContent(current_page)">Cancel</button>
+-->
