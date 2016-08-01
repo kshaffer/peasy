@@ -24,7 +24,7 @@ function getNavbar() {
         navbarLinks += "<li class=\"active\"><a href=\"" + page_short_title + "\">" + page_short_title + "</a></li>\n";
       };
       if (sessionStorage.token) {
-        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"new\">New Page</a></li><li class=\"active\"><a href=\"import\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
+        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"deletePage()\">Delete This Page</a></li><li class=\"active\"><a href=\"new\">New Page</a></li><li class=\"active\"><a href=\"import\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
       } else {
         navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getLoginForm()\">Login</a></li><li class=\"active\"><a id=\"contact-email\" href=\"http://kris.shaffermusic.com/contact/\">Contact</a></li><li class=\"active\">";
       };
@@ -78,30 +78,6 @@ function getPageContentFromURL() {
 function getPageContent(pageName) {
   var siteRoot = window.location.hostname;
   window.location.assign('https://' + siteRoot + '/' + pageName);
-  /*
-  $.getJSON('site_content.json', function (data) {
-    if (data.meta.is_setup === true) {
-      getNavbar();
-      var sitePages = data.pages;
-      if (pageName in sitePages) {
-        var siteContent = data.pages[pageName];
-        current_page = pageName;
-      } else {
-        var siteContent = data.pages.Home;
-        current_page = 'Home';
-      }
-      if (pageName === 'Home') {
-        document.getElementById('page-heading').innerHTML = data.meta.title;
-      } else {
-        document.getElementById('page-heading').innerHTML = siteContent.title;
-      }
-      //document.getElementById('page-subheading').innerHTML = siteContent.author;
-      document.getElementById('page-content').innerHTML = siteContent.content;
-    } else {
-      getSetupForm();
-    }
-  });
-  */
 };
 
 // opens edit page, loads data from database for editing
@@ -119,9 +95,6 @@ function getEditForm() {
       // load page data from site_content.json and populate form
       $.getJSON('site_content.json', function (data) {
         var siteContent = data.pages[current_page];
-        console.log(data.pages[current_page]);
-        console.log(data.pages[current_page].title);
-        console.log(data.pages[current_page].author);
         document.getElementById('editPageContent').innerHTML = data.pages[current_page].content;
         document.getElementById('editContentTitle').value = data.pages[current_page].title;
 
@@ -213,8 +186,6 @@ function getEditForm() {
 function collectContent() {
   $.getJSON('site_content.json', function (data) {
     var site_content = data;
-    console.log(site_content.pages[current_page].author);
-    console.log(site_content.pages[current_page].title);
     var allContent = editor.serialize();
     var title = document.inputNewTitle.title.value;
     var content = allContent.editPageContent.value;
@@ -243,6 +214,24 @@ function collectContent() {
   });
   event.preventDefault();
 };
+
+function deletePage() {
+  var yes_i_really_want_to = confirm("Click OK if you want to permanently delete the " + current_page + " page from your site. Otherwise click Cancel.");
+  if (yes_i_really_want_to) {
+    $.getJSON('site_content.json', function (data) {
+      var site_content = data;
+      delete site_content.pages[current_page];
+      var site_content_string = JSON.stringify(site_content);
+      $.ajax({
+        type: 'POST',
+        url: './save_file.php',
+        data: { data: site_content_string },
+        success: getPageContent('Home'),
+        dataType: 'application/json'
+      });
+    });
+  }
+}
 
 function getNewPageForm() {
   $.ajax({
@@ -292,7 +281,6 @@ function createNewPage() {
 };
 
 function getImportForm() {
-  // get navbar from navbar.html and load into html
   $.ajax({
     headers: { 'Authorization': ('Bearer ' + sessionStorage.token)},
     type: 'GET',
