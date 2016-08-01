@@ -307,40 +307,45 @@ function getImportForm() {
 // get URL of site to clone from user,
 // fetch data, then go to edit page
 function editFromURL() {
+  var yes_i_really_want_to = confirm("Importing another Rooibos site's content will completely delete and replace your current content. Click OK if you really want to do that.");
+  if (yes_i_really_want_to) {
   // load local metadata
-  $.getJSON('site_content.json', function (data) {
-    var site_content = data;
-    var site_meta_data = site_content.meta;
-    var siteImportURL = (document.importurl.siteImportURL.value + '/api.php');
-    var siteImportURL_root = document.importurl.siteImportURL.value;
+    $.getJSON('site_content.json', function (data) {
+      var site_content = data;
+      var site_meta_data = site_content.meta;
+      var siteImportURL = (document.importurl.siteImportURL.value + '/api.php');
+      var siteImportURL_root = document.importurl.siteImportURL.value;
 
-    // load remote data to import
-    $.get(siteImportURL, function (data) {
-      var imported_data = JSON.parse(data);
-      if (imported_data.meta.platform === "rooibos") {
-        var site_import_pages = imported_data.pages;
-        var site_import_posts = imported_data.posts;
-        site_meta_data.footer_attribution = "<p>This site was originally cloned from " + "<a href=\"" + siteImportURL_root + "\">" + siteImportURL_root + "</a>.</p>";
-        var post_object = {
-          "meta": site_meta_data,
-          "pages": site_import_pages,
-          "posts": site_import_posts
-        }
-        var post_object_string = JSON.stringify(post_object);
+      // load remote data to import
+      $.get(siteImportURL, function (data) {
+        var imported_data = JSON.parse(data);
+        if (imported_data.meta.platform === "rooibos") {
+          var site_import_pages = imported_data.pages;
+          var site_import_posts = imported_data.posts;
+          site_meta_data.footer_attribution = "<p>This site was originally cloned from " + "<a href=\"" + siteImportURL_root + "\">" + siteImportURL_root + "</a>.</p>";
+          var post_object = {
+            "meta": site_meta_data,
+            "pages": site_import_pages,
+            "posts": site_import_posts
+          }
+          var post_object_string = JSON.stringify(post_object);
 
-        // write form content to file
-        $.ajax({
-        type: 'POST',
-        url: './save_file.php',
-        data: { data: post_object_string },
-        success: getEditForm(),
-        dataType: 'application/json'
-        });
-      } else {
-        alert('The platform on ' + siteImportURL + ' is not supported.');
-      };
+          // write form content to file
+          $.ajax({
+          type: 'POST',
+          url: './save_file.php',
+          data: { data: post_object_string },
+          success: getEditForm(),
+          dataType: 'application/json'
+          });
+        } else {
+          alert('The platform on ' + siteImportURL + ' is not supported.');
+        };
+      });
     });
-  });
+  } else {
+    getImportForm();
+  }
   event.preventDefault();
 };
 
