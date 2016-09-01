@@ -1,4 +1,4 @@
-# supersimpleblog
+# Peasy - a super-simple, OER-friendly CMS
 
 Peasy is a simple, clean, open-by-default way to publish to the web. Peasy is open-source software, and it's goal is to be as easy to use as Medium, but hosted on your own domain.
 
