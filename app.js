@@ -295,7 +295,7 @@ function getImportForm() {
 // get URL of site to clone from user,
 // fetch data, then go to edit page
 function editFromURL() {
-  var yes_i_really_want_to = confirm("Importing another Rooibos site's content will completely delete and replace your current content. Click OK if you really want to do that.");
+  var yes_i_really_want_to = confirm("Importing another Peasy site's content will completely delete and replace your current content. Click OK if you really want to do that.");
   if (yes_i_really_want_to) {
   // load local metadata
     $.getJSON('site_content.json', function (data) {
@@ -307,7 +307,7 @@ function editFromURL() {
       // load remote data to import
       $.get(siteImportURL, function (data) {
         var imported_data = JSON.parse(data);
-        if (imported_data.meta.platform === "rooibos") {
+        if (imported_data.meta.platform === "rooibos" || imported_data.meta.platform === "peasy") {
           var site_import_pages = imported_data.pages;
           var site_import_posts = imported_data.posts;
           site_meta_data.footer_attribution = "<p>This site was originally cloned from " + "<a href=\"" + siteImportURL_root + "\">" + siteImportURL_root + "</a>.</p>";
@@ -390,10 +390,10 @@ function getSetupForm() {
     url: 'includes/setup_form.html',
     success: function (data) {
       var setupFormContent = data;
-      document.getElementById('page-heading').innerHTML = 'Rooibos Site Setup';
+      document.getElementById('page-heading').innerHTML = 'Peasy Site Setup';
       //document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = setupFormContent;
-      document.getElementById('metaclone').innerHTML = 'https://rooibos.pushpullfork.com';
+      document.getElementById('metaclone').innerHTML = 'https://peasy.pushpullfork.com';
       secret_key = getNewSecretKey();
     }
   });
@@ -442,7 +442,7 @@ function importFromURL(siteImportURL, siteImportURL_root, title, author, email) 
     "contact_email": email,
     "copyright_year": "2016",
     "url": window.location.href,
-    "platform": "rooibos",
+    "platform": "peasy",
     "version": "alpha",
     "footer_copyright": "<p><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
     "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>",
@@ -454,7 +454,7 @@ function importFromURL(siteImportURL, siteImportURL_root, title, author, email) 
   // load remote data to import
   $.get(siteImportURL, function (data) {
     var imported_data = JSON.parse(data);
-    if (imported_data.meta.platform === "rooibos") {
+    if (imported_data.meta.platform === "rooibos" || imported_data.meta.platform === "peasy") {
       var site_import_pages = imported_data.pages;
       var site_import_posts = imported_data.posts;
       console.log(imported_data.pages);
