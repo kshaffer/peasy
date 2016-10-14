@@ -60,7 +60,10 @@
   $page_content .= $navbar;
   $page_content .= '</div>';
 
-  $page_content .= '<div id="banner-image"><img src="/files/banner.jpg" alt="Contribute: hand adding freshly chewed piece of gum to a wall containing many differently colored pieces of chewed gum." style="width: 100%; padding: 0px; margin: 0px; border: 0px;" /></div>';
+  $banner_file = './files/banner.jpg';
+  if (file_exists($banner_file)) {
+    $page_content .= '<div id="banner-image"><img src="/files/banner.jpg" alt="Contribute: hand adding freshly chewed piece of gum to a wall containing many differently colored pieces of chewed gum." style="width: 100%; padding: 0px; margin: 0px; border: 0px;" /></div>';
+  };
 
   $page_content .= '<div class="container"><div class="col-md-2"></div><div class="col-md-8">';
 
