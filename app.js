@@ -71,7 +71,15 @@ function getEditForm() {
         document.getElementById('editContentTitle').value = data.pages[current_page].title;
 
         editor = new MediumEditor('.editable', {
-          placholder: false
+          placholder: false,
+          paste: {
+            forcePlainText: false,
+            cleanPastedHTML: true,
+            cleanReplacements: [],
+            cleanAttrs: ['class', 'style', 'dir'],
+            cleanTags: ['meta'],
+            unwrapTags: []
+          }
         });
 
         $(function () {
@@ -180,7 +188,7 @@ function collectContent() {
       type: 'POST',
       url: './save_file.php',
       data: { data: post_object_string },
-      success: getPageContent(current_page),
+      success: setTimeout(function() { getPageContent(current_page) }, 200),
       dataType: 'application/json'
     });
   });
