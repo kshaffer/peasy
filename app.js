@@ -71,6 +71,7 @@ function getEditForm() {
         document.getElementById('editContentTitle').value = data.pages[current_page].title;
 
         editor = new MediumEditor('.editable', {
+          buttonLabels: 'fontawesome',
           placholder: false,
           paste: {
             forcePlainText: false,

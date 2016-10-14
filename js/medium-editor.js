@@ -3464,7 +3464,8 @@ MediumEditor.extensions = {};
             aria: 'header type two',
             tagNames: ['h2'],
             contentDefault: '<b>H2</b>',
-            contentFA: '<i class="fa fa-header"><sup>2</sup>'
+            contentFA: '<b>H2</b>'
+            //contentFA: '<i class="fa fa-header"><sup>2</sup>'
         },
         'h3': {
             name: 'h3',
@@ -3472,7 +3473,8 @@ MediumEditor.extensions = {};
             aria: 'header type three',
             tagNames: ['h3'],
             contentDefault: '<b>H3</b>',
-            contentFA: '<i class="fa fa-header"><sup>3</sup>'
+            contentFA: '<b>H3</b>'
+            //contentFA: '<i class="fa fa-header"><sup>3</sup>'
         },
         'h4': {
             name: 'h4',
@@ -5711,7 +5713,7 @@ MediumEditor.extensions = {};
         /* buttons: [Array]
          * the names of the set of buttons to display on the toolbar.
          */
-        buttons: ['bold', 'italic', 'underline', 'unorderedlist', 'anchor', 'h2', 'h3', 'quote', 'removeFormat'],
+        buttons: ['bold', 'italic', 'underline', 'unorderedlist', 'anchor', 'h2', 'h3', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'removeFormat'],
 
         /* diffLeft: [Number]
          * value in pixels to be added to the X axis positioning of the toolbar.

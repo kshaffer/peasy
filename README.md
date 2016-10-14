@@ -11,4 +11,5 @@ This project is built on top of some amazing projects:
 - [Medium Editor](https://yabwe.github.io/medium-editor/) for a pleasant writing experience, editing directly on the page.  
 - [Medium Editor Insert](http://linkesch.com/medium-editor-insert-plugin/) for easy embedding of media like pictures and videos.  
 - [Bootstrap](https://getbootstrap.com/) for simple styling.  
-- And of course, HTML, CSS, JavaScript (client-side), and PHP (server-side, and shared hosting compatible).
+- [Font Awesome](http://fontawesome.io/) for the button icons in Medium Editor.  
+- And of course, HTML, CSS, JavaScript (client-side), and PHP (server-side, and shared hosting compatible).  
