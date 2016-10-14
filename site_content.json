@@ -22,7 +22,8 @@
       "image_credit_photographer":"",
       "author":"",
       "title":"",
-      "content":""
+      "content":"",
+      "navbar":true
     }
   },
   "posts": {

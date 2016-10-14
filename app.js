@@ -22,7 +22,10 @@ function getNavbar() {
       var pages = data.pages;
       var navbarLinks = '';
       for (page_short_title in pages) {
-        navbarLinks += "<li class=\"active\"><a href=\"" + page_short_title + "\">" + page_short_title + "</a></li>\n";
+        page_keys = Object.keys(pages[page_short_title]);
+        if (!(page_keys.includes('navbar')) || pages[page_short_title].navbar == true) {
+          navbarLinks += "<li class=\"active\"><a href=\"" + page_short_title + "\">" + page_short_title + "</a></li>\n";
+        };
       };
       if (sessionStorage.token) {
         navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"deletePage()\">Delete This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
@@ -40,7 +43,6 @@ function getNavbar() {
 
 function getCurrentPage() {
   page_path = String(window.location.pathname.replace('/', ''));
-  console.log(page_path);
   return page_path.toTitleCase();
 };
 
@@ -440,8 +442,6 @@ function importFromURL(siteImportURL, siteImportURL_root, title, author, email) 
     if (imported_data.meta.platform === "rooibos" || imported_data.meta.platform === "peasy") {
       var site_import_pages = imported_data.pages;
       var site_import_posts = imported_data.posts;
-      console.log(imported_data.pages);
-      console.log(imported_data.posts);
       var post_object = {
         "meta": site_meta_object,
         "pages": site_import_pages,
