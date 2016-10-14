@@ -31,7 +31,7 @@
   </head>
   <body onload="getHeaderAndFooter(); getNavbar();">
   <?php
-  
+
   function current_url () {
     $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';
     $host     = $_SERVER['HTTP_HOST'];
@@ -49,42 +49,40 @@
   if ($current_page === '' || $current_page === 'index.php' || $current_page === 'index.html' || $current_page === 'index' || $current_page === 'home') {
     $current_page = 'Home';
     }
-  
+
   $navbar = ''; // for later
-  
+
   $header_content = $site_content['pages'][$current_page]['title'];
   $main_content = $site_content['pages'][$current_page]['content'];
   $footer_content = $site_content['meta']['footer_copyright'] . $site_content['meta']['copyright_year'] . ' ' . $site_content['meta']['author'] . '. ' . $site_content['meta']['footer_license'] . '<br/>' . $site_content['meta']['footer_attribution'];
-  
+
   $page_content = '<div id="navbar">';
   $page_content .= $navbar;
   $page_content .= '</div>';
-  
+
   $page_content .= '<div id="banner-image"><img src="/files/banner.jpg" alt="Contribute: hand adding freshly chewed piece of gum to a wall containing many differently colored pieces of chewed gum." style="width: 100%; padding: 0px; margin: 0px; border: 0px;" /></div>';
-  
+
   $page_content .= '<div class="container"><div class="col-md-2"></div><div class="col-md-8">';
-  
+
   $page_content .= '<h1 id="page-heading">';
   $page_content .= $header_content;
   $page_content .= '</h1>';
-  
+
   $page_content .= '<div id="page-content">';
   $page_content .= $main_content;
   $page_content .= '</div>';
-  
+
   $page_content .= '</div><div class="col-md-2"></div></div><div class="container"><div class="col-md-2"></div><div class="col-md-8"><hr/>';
-  
+
   $page_content .= '<div id="page-footer">';
   $page_content .= $footer_content;
   $page_content .= '</div>';
-  
+
   $page_content .= '</div><div class="col-md-2"></div></div>';
-  
+
   echo $page_content;
-
-
   ?>
-    
+
     <!-- Blog content -->
     <script type="text/javascript" src="app.js"></script>
 
@@ -108,25 +106,5 @@
     <script src="js/jquery-sortable.js"></script>
     <script src="js/medium-editor-insert-plugin.js"></script>
 
-<!-- Piwik -->
-<script type="text/javascript">
-  var _paq = _paq || [];
-  _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-  _paq.push(["setDomains", ["*.ds106.pushpullfork.com"]]);
-  _paq.push(["disableCookies"]);
-  _paq.push(['trackPageView']);
-  _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//piwik.pushpullfork.com/";
-    _paq.push(['setTrackerUrl', u+'piwik.php']);
-    _paq.push(['setSiteId', '3']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-  })();
-</script>
-<noscript><p><img src="//piwik.pushpullfork.com/piwik.php?idsite=3" style="border:0;" alt="" /></p></noscript>
-<!-- End Piwik Code -->
-
   </body>
 </html>
-
