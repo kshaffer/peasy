@@ -64,11 +64,17 @@ function getEditForm() {
       var editFormContent = data;
       document.getElementById('page-heading').innerHTML = '';
       //document.getElementById('page-subheading').innerHTML = '';
-      document.getElementById('page-content').innerHTML = editFormContent.form_content;
+
 
       // load page data from site_content.json and populate form
       $.getJSON('site_content.json', function (data) {
         var siteContent = data.pages[current_page];
+        console.log(data.pages[current_page].navbar);
+        if (Object.keys(data.pages[current_page]).includes('navbar') && data.pages[current_page].navbar == false) {
+          document.getElementById('page-content').innerHTML = editFormContent.form_content.replace('checked', '');
+        } else {
+          document.getElementById('page-content').innerHTML = editFormContent.form_content;
+        }
         document.getElementById('editPageContent').innerHTML = data.pages[current_page].content;
         document.getElementById('editContentTitle').value = data.pages[current_page].title;
 
@@ -171,6 +177,7 @@ function collectContent() {
     var site_content = data;
     var allContent = editor.serialize();
     var title = document.inputNewTitle.title.value;
+    var navbar_include = document.inputNewTitle.include_in_navbar.checked;
     var content = allContent.editPageContent.value;
     var short_title = current_page;
     var post_object = {
@@ -180,11 +187,16 @@ function collectContent() {
       "image_credit_photographer": "",
       "author": "",
       "content": content,
-      "title": title
+      "title": title,
+      "navbar": navbar_include
     };
     site_content.pages[short_title] = post_object;
 
     var post_object_string = JSON.stringify(site_content);
+
+    if (navbar_include == false) {
+      window.alert('The ' + short_title + ' page will not be included in the navigation bar. Be sure to link to it from another page, or click "Edit this page" and check the box to include in the navigation bar.');
+    }
 
     // write form content to file
     $.ajax({
