@@ -1,4 +1,5 @@
-var current_page = 'Home';
+var current_page = 'home';
+var current_cache_index = 1;
 
 String.prototype.toTitleCase = function () {
     return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
@@ -24,7 +25,7 @@ function getNavbar() {
         navbarLinks += "<li class=\"active\"><a href=\"" + page_short_title + "\">" + page_short_title + "</a></li>\n";
       };
       if (sessionStorage.token) {
-        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"deletePage()\">Delete This Page</a></li><li class=\"active\"><a href=\"new\">New Page</a></li><li class=\"active\"><a href=\"import\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
+        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"deletePage()\">Delete This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
       } else {
         navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getLoginForm()\">Login</a></li><li class=\"active\"><a id=\"contact-email\" href=\"http://kris.shaffermusic.com/contact/\">Contact</a></li><li class=\"active\">";
       };
@@ -37,42 +38,12 @@ function getNavbar() {
   });
 };
 
-function getPageContentFromURL() {
-  $.getJSON('site_content.json', function (data) {
-    if (data.meta.is_setup === true) {
-      getNavbar();
-      var sitePages = data.pages;
-      if (window.location.pathname.replace('/', '') in sitePages) {
-        var pageName = window.location.pathname.replace('/', '');
-        var siteContent = data.pages[pageName];
-        current_page = pageName;
-      } else if (window.location.pathname.replace('/', '').toTitleCase() in sitePages) {
-        var pageName = window.location.pathname.replace('/', '').toTitleCase();
-        var siteContent = data.pages[pageName];
-        current_page = pageName;
-      } else if (window.location.pathname.replace('/', '') === 'new') {
-        var pageName = 'new';
-        getNewPageForm();
-      } else if (window.location.pathname.replace('/', '') === 'import') {
-        getImportForm();
-      } else {
-        var siteContent = data.pages.Home;
-        current_page = 'Home';
-      }
-      if (pageName === 'Home') {
-        document.getElementById('page-heading').innerHTML = data.meta.title;
-        document.getElementById('page-content').innerHTML = siteContent.content;
-      } else if (pageName === 'new' || pageName === 'New') {
-        document.getElementById('page-heading').innerHTML = 'Create a new page.';
-      } else {
-        document.getElementById('page-heading').innerHTML = siteContent.title;
-        document.getElementById('page-content').innerHTML = siteContent.content;
-      }
-    } else {
-      getSetupForm();
-    }
-  });
+function getCurrentPage() {
+  page_path = String(window.location.pathname.replace('/', ''));
+  console.log(page_path);
+  return page_path.toTitleCase();
 };
+
 
 // load syllabus data from site_content.json and populate page
 function getPageContent(pageName) {
@@ -82,6 +53,7 @@ function getPageContent(pageName) {
 
 // opens edit page, loads data from database for editing
 function getEditForm() {
+  current_page = getCurrentPage();
   $.ajax({
     headers: { 'Authorization': ('Bearer ' + sessionStorage.token)},
     type: 'GET',
@@ -216,6 +188,7 @@ function collectContent() {
 };
 
 function deletePage() {
+  current_page = getCurrentPage();
   var yes_i_really_want_to = confirm("Click OK if you want to permanently delete the " + current_page + " page from your site. Otherwise click Cancel.");
   if (yes_i_really_want_to) {
     $.getJSON('site_content.json', function (data) {
@@ -253,7 +226,8 @@ function createNewPage() {
     var site_content = data;
     var title = document.newPageForm.pagetitle.value;
     var author = document.newPageForm.pageauthor.value;
-    var short_title = document.newPageForm.shortlink.value;
+    var short = document.newPageForm.shortlink.value;
+    var short_title = short.toTitleCase();
     current_page = short_title;
     var post_object = {
       "timestamp": "",
@@ -323,7 +297,7 @@ function editFromURL() {
           type: 'POST',
           url: './save_file.php',
           data: { data: post_object_string },
-          success: getEditForm(),
+          success: getPageContent('Home'),
           dataType: 'application/json'
           });
         } else {
