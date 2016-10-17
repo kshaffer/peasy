@@ -69,7 +69,7 @@ function getEditForm() {
       // load page data from site_content.json and populate form
       $.getJSON('site_content.json', function (data) {
         var siteContent = data.pages[current_page];
-        console.log(data.pages[current_page].navbar);
+        console.log(data.pages[current_page]);
         if (Object.keys(data.pages[current_page]).includes('navbar') && data.pages[current_page].navbar == false) {
           document.getElementById('page-content').innerHTML = editFormContent.form_content.replace('checked', '');
         } else {
@@ -178,6 +178,7 @@ function collectContent() {
     var allContent = editor.serialize();
     var title = document.inputNewTitle.title.value;
     var navbar_include = document.inputNewTitle.include_in_navbar.checked;
+    console.log(navbar_include);
     var content = allContent.editPageContent.value;
     var short_title = current_page;
     var post_object = {
