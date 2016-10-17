@@ -441,7 +441,7 @@ function importFromURL(siteImportURL, siteImportURL_root, title, author, email) 
     "copyright_year": "2016",
     "url": window.location.href,
     "platform": "peasy",
-    "version": "alpha",
+    "version": "beta01",
     "footer_copyright": "<p><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
     "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>",
     "footer_attribution": "<p>This site was originally cloned from " + "<a href=\"" + siteImportURL_root + "\">" + siteImportURL_root + "</a>.</p>",
