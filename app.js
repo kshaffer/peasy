@@ -27,15 +27,17 @@ function getNavbar() {
           navbarLinks += "<li class=\"active\"><a href=\"" + page_short_title + "\">" + page_short_title + "</a></li>\n";
         };
       };
-      if (sessionStorage.token) {
-        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"deletePage()\">Delete This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
-      } else {
-        navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getLoginForm()\">Login</a></li><li class=\"active\"><a id=\"contact-email\" href=\"http://kris.shaffermusic.com/contact/\">Contact</a></li><li class=\"active\">";
-      };
-      document.getElementById('navbar').innerHTML = navbarContent;
-      document.getElementById('navbar-links').innerHTML = navbarLinks;
-      if (!sessionStorage.token) {
-        document.getElementById('contact-email').href = 'mailto:' + site.contact_email;
+      if (site.is_setup === true) {
+        if (sessionStorage.token) {
+          navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"deletePage()\">Delete This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
+        } else {
+          navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getLoginForm()\">Login</a></li><li class=\"active\"><a id=\"contact-email\" href=\"http://kris.shaffermusic.com/contact/\">Contact</a></li><li class=\"active\">";
+        };
+        document.getElementById('navbar').innerHTML = navbarContent;
+        document.getElementById('navbar-links').innerHTML = navbarLinks;
+        if (!sessionStorage.token) {
+          document.getElementById('contact-email').href = 'mailto:' + site.contact_email;
+        }
       }
     });
   });
@@ -392,18 +394,19 @@ function getSetupForm() {
       //document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = setupFormContent;
       document.getElementById('metaclone').innerHTML = 'https://peasy.pushpullfork.com';
-      secret_key = getNewSecretKey();
     }
   });
 };
 
-function getNewSecretKey() {
-  $.get('generate_key.php', function (data) {
-    secret_key = data.secretkey;
+function writeInitialSetupData() {
+  $.get('https://syllabus.pushpullfork.com/generate_key.php', function (data) {
+    postSetupData(data.secretkey);
   });
+  event.preventDefault();
 };
 
-function writeInitialSetupData() {
+function postSetupData(secret_key) {
+  var secret_key = secret_key;
   var siteImportURL = (document.setupform.metaclone.value + '/api.php');
   var siteImportURL_root = document.setupform.metaclone.value;
   var title = document.setupform.metatitle.value;
@@ -414,9 +417,9 @@ function writeInitialSetupData() {
   var login_object = {
     "username": user,
     "password": pass,
-    "key": secret_key,
     "algorithm": "HS512",
-    "serverName": window.location.href
+    "serverName": window.location.href,
+    "key": secret_key
   }
   var login_object_string = JSON.stringify(login_object);
 
@@ -476,47 +479,3 @@ function importFromURL(siteImportURL, siteImportURL_root, title, author, email) 
   });
   event.preventDefault();
 };
-
-
-
-// The following code can be used as the skeleton of a blog format, rather than a single page
-// this is old code that needs tweaking in light of updates to the js
-
-/*
-window.onload = function() {
-  var post_list_content = '';
-
-  // post a single page if asked via URL query
-  if (urlObject().parameters['p']) {
-    var i = urlObject().parameters['p'] - 1;
-    post_list_content += '<h1>';
-    post_list_content += content.posts[i].title;
-    post_list_content += '</h1>\n<h2>by ';
-    post_list_content += content.posts[i].author;
-    post_list_content += '</h2>\n<br/>';
-    post_list_content += content.posts[i].text;
-    post_list_content += '\n<br/><hr/><br/>';
-  } else {
-
-  // post all pages in reverse index order (need to change to timestamps and reverse chronological order)
-    for(i = content.posts.length - 1; i >= 0; i -= 1) {
-      post_list_content += '<h1><a href="';
-      post_list_content += site.url;
-      post_list_content += '?p=';
-      post_list_content += (content.posts[i].index);
-      post_list_content += '">';
-      post_list_content += content.posts[i].title;
-      post_list_content += '</a></h1>\n<h2>by ';
-      post_list_content += content.posts[i].author;
-      post_list_content += '</h2>\n<br/>';
-      post_list_content += content.posts[i].text;
-      post_list_content += '\n<br/><hr/><br/>';
-  }
-}
-
-  document.getElementById('list-of-posts').innerHTML = post_list_content;
-  document.getElementById('site-title').innerHTML = site.title;
-  document.getElementById('banner-title').innerHTML = site.title;
-  document.getElementById('site-author').innerHTML = 'by ' + site.author;
-};
-*/
