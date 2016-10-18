@@ -47,7 +47,7 @@
   if ($site_content['meta']['is_setup'] === true) {
     $current_url = current_url();
     $parsed_url = parse_url($current_url);
-    $current_page = str_replace('/', '', $_SERVER['REQUEST_URI']);
+    $current_page = ucwords(strtolower(str_replace('/', '', $_SERVER['REQUEST_URI'])));
     if ($current_page === '' || $current_page === 'index.php' || $current_page === 'index.html' || $current_page === 'index' || $current_page === 'home') {
       $current_page = 'Home';
       }

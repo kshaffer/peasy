@@ -471,7 +471,7 @@ function importFromURL(siteImportURL, siteImportURL_root, title, author, email) 
       url: './save_file.php',
       data: { data: post_object_string },
       dataType: 'application/json',
-      success: setTimeout(function() { getPageContent('Home') }, 400)
+      success: setTimeout(function() { getPageContent('') }, 500)
       });
     } else {
       alert('The platform on ' + siteImportURL + ' is not supported.');
