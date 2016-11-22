@@ -47,7 +47,7 @@
   if ($site_content['meta']['is_setup'] === true) {
     $current_url = current_url();
     $parsed_url = parse_url($current_url);
-    $current_page = ucwords(strtolower(str_replace('/', '', $_SERVER['REQUEST_URI'])));
+    $current_page = ucwords(strtolower(str_replace('-', ' ', str_replace('%20', ' ', str_replace('/', '', $_SERVER['REQUEST_URI'])))));
     if ($current_page === '' || $current_page === 'index.php' || $current_page === 'index.html' || $current_page === 'index' || $current_page === 'home') {
       $current_page = 'Home';
       }
@@ -102,6 +102,12 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+    <!-- bust the cache and request a new site_content.json file for each API call -->
+    <script>
+    	$(document).ready(function() {
+    	  $.ajaxSetup({ cache: false });
+    	});
+    </script>
     <script src="js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>

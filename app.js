@@ -24,7 +24,7 @@ function getNavbar() {
       for (page_short_title in pages) {
         page_keys = Object.keys(pages[page_short_title]);
         if (!(page_keys.includes('navbar')) || pages[page_short_title].navbar == true) {
-          navbarLinks += "<li class=\"active\"><a href=\"" + page_short_title + "\">" + page_short_title + "</a></li>\n";
+          navbarLinks += "<li class=\"active\"><a href=\"" + page_short_title.replace(' ', '-') + "\">" + page_short_title + "</a></li>\n";
         };
       };
       if (site.is_setup === true) {
@@ -44,7 +44,7 @@ function getNavbar() {
 };
 
 function getCurrentPage() {
-  page_path = String(window.location.pathname.replace('/', ''));
+  page_path = String(window.location.pathname.replace('/', '').replace('%20', ' ').replace('-', ' '));
   return page_path.toTitleCase();
 };
 
@@ -52,7 +52,7 @@ function getCurrentPage() {
 // load syllabus data from site_content.json and populate page
 function getPageContent(pageName) {
   var siteRoot = window.location.hostname;
-  window.location.assign('https://' + siteRoot + '/' + pageName);
+  window.location.assign('https://' + siteRoot + '/' + pageName.replace(' ', '-').replace('%20', '-'));
 };
 
 // opens edit page, loads data from database for editing
@@ -206,7 +206,7 @@ function collectContent() {
       type: 'POST',
       url: './save_file.php',
       data: { data: post_object_string },
-      success: setTimeout(function() { getPageContent(current_page) }, 200),
+      success: setTimeout(function() { getPageContent(current_page.replace('%20', '-')) }, 200),
       dataType: 'application/json'
     });
   });
