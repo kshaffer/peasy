@@ -88,7 +88,7 @@ function getEditForm() {
             cleanPastedHTML: true,
             cleanReplacements: [],
             cleanAttrs: ['class', 'style', 'dir'],
-            cleanTags: ['meta'],
+            cleanTags: ['script', 'link', 'meta', 'style'],
             unwrapTags: []
           }
         });
