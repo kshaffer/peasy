@@ -82,6 +82,9 @@ function getEditForm() {
 
         editor = new MediumEditor('.editable', {
           buttonLabels: 'fontawesome',
+          toolbar: {
+            buttons: ['bold', 'italic', 'underline', 'unorderedlist', 'anchor', 'h2', 'h3', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', 'removeFormat']
+          },
           placholder: false,
           paste: {
             forcePlainText: false,
@@ -89,7 +92,7 @@ function getEditForm() {
             cleanReplacements: [],
             cleanAttrs: ['class', 'style', 'dir'],
             cleanTags: ['script', 'link', 'meta', 'style'],
-            unwrapTags: []
+            unwrapTags: ['span', 'div', 'article', 'hypothesis-highlight']
           }
         });
 
