@@ -29,7 +29,7 @@ function getNavbar() {
       };
       if (site.is_setup === true) {
         if (sessionStorage.token) {
-          navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"deletePage()\">Delete This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Import</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
+          navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"deletePage()\">Delete This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Admin</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
         } else {
           navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getLoginForm()\">Login</a></li><li class=\"active\"><a id=\"contact-email\" href=\"http://kris.shaffermusic.com/contact/\">Contact</a></li><li class=\"active\">";
         };
@@ -384,6 +384,94 @@ function getLoginForm() {
   });
 };
 
+// update password from Admin panel
+function changePassword() {
+  var username = document.update_password.username.value;
+  var password = document.update_password.current_password.value;
+  var new_password = document.update_password.new_password.value;
+
+  var login_object = {
+    "action": "authenticate",
+    "username": username,
+    "password": password
+  }
+  var login_object_string = JSON.stringify(login_object);
+
+  // send login info to PHP API
+
+  $.ajax({
+  type: 'POST',
+  url: './secure.php',
+  data: { data: login_object_string },
+  dataType: 'json',
+  success: function(returnedData) {
+    updateConfigData(username, new_password);
+  },
+  error: function (jqXHR, textStatus, errorThrown) {
+              delete sessionStorage.token;
+              alert("Incorrect login information. Password NOT updated. Please try again." /* + "jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown */ );
+            }
+  });
+  event.preventDefault();
+};
+
+function updateConfigData(username, new_password) {
+  $.get('https://syllabus.pushpullfork.com/generate_key.php', function (data) {
+    postConfigData(username, new_password, data.secretkey);
+  });
+  event.preventDefault();
+};
+
+function postConfigData(username, new_password, secret_key) {
+  var secret_key = secret_key;
+  var login_object = {
+    "username": username,
+    "password": new_password,
+    "algorithm": "HS512",
+    "serverName": window.location.href,
+    "key": secret_key
+  }
+  var login_object_string = JSON.stringify(login_object);
+
+  // write new login data to user_db.json
+  $.ajax({
+    type: 'POST',
+    url: './save_login.php',
+    data: { data: login_object_string },
+    dataType: 'json',
+    success: setTimeout(function() { loginNewCreds(username, new_password) }, 500)
+  });
+  event.preventDefault();
+};
+
+function loginNewCreds(username, password) {
+  delete sessionStorage.token;
+  var login_object = {
+    "action": "authenticate",
+    "username": username,
+    "password": password
+  }
+  var login_object_string = JSON.stringify(login_object);
+
+  // send login info to PHP API
+
+  $.ajax({
+  type: 'POST',
+  url: './secure.php',
+  data: { data: login_object_string },
+  dataType: 'json',
+  success: function(returnedData) {
+    sessionStorage.token = returnedData.jwt;
+    alert('Password successfully updated.');
+    getPageContent('Home');
+  },
+  error: function (jqXHR, textStatus, errorThrown) {
+              delete sessionStorage.token;
+              alert("Login error. Please check your username and password." /* + "jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown */ );
+            }
+  });
+};
+
 
 // when site is not yet setup, opens setup form,
 // loads and edits/adds meta data
@@ -394,12 +482,12 @@ function getSetupForm() {
     success: function (data) {
       var setupFormContent = data;
       document.getElementById('page-heading').innerHTML = 'Peasy Site Setup';
-      //document.getElementById('page-subheading').innerHTML = '';
       document.getElementById('page-content').innerHTML = setupFormContent;
       document.getElementById('metaclone').innerHTML = 'https://peasy.pushpullfork.com';
     }
   });
 };
+
 
 function writeInitialSetupData() {
   $.get('https://syllabus.pushpullfork.com/generate_key.php', function (data) {
@@ -444,10 +532,10 @@ function importFromURL(siteImportURL, siteImportURL_root, title, author, email) 
     "title": title,
     "author": author,
     "contact_email": email,
-    "copyright_year": "2016",
+    "copyright_year": "2017",
     "url": window.location.href,
     "platform": "peasy",
-    "version": "beta01",
+    "version": "beta02",
     "footer_copyright": "<p><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
     "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>",
     "footer_attribution": "<p>This site was originally cloned from " + "<a href=\"" + siteImportURL_root + "\">" + siteImportURL_root + "</a>.</p>",
