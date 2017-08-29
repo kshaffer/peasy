@@ -1,32 +1,38 @@
 {
   "meta": {
-    "title":"",
-    "author":"",
-    "footer_copyright":"<p><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
-    "footer_license":"This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>",
+    "title": "Peasy - simple HTML websites",
+    "author": "Kris Shaffer",
+    "footer_copyright": "<p><a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0; float: right\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a>Copyright &copy;",
+    "footer_license": "This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>",
     "footer_attribution": "",
-    "copyright_year":"2017",
-    "contact_email":"",
-    "is_setup":false,
-    "index_feature_image":"",
-    "index_feature_image_credit":"",
-    "url":"",
-    "platform":"peasy",
-    "version":"beta0.2"
+    "copyright_year": "2017",
+    "contact_email": "kshaffer@umw.edu",
+    "is_setup": true,
+    "url": "https://peasy.pushpullfork.com",
+    "platform": "peasy",
+    "version":"beta0.3"
   },
   "pages": {
     "Home": {
       "timestamp":"",
-      "feature_image":"",
+      "feature_image":"banner.jpg",
+      "feature_image_alt_text":"Monuments National Park",
       "image_credit_url":"",
       "image_credit_photographer":"",
       "author":"",
-      "title":"",
-      "content":"",
+      "title":"Home",
+      "filename":"home.html",
       "navbar":true
+    },
+    "Page Two": {
+      "timestamp": "",
+      "feature_image": "",
+      "image_credit_url": "",
+      "image_credit_photographer": "",
+      "author": "Kris Shaffer",
+      "title": "Page Two: another Peasy page",
+      "filename": "page2.html",
+      "navbar": true
     }
-  },
-  "posts": {
-
   }
 }

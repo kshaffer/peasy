@@ -27,18 +27,9 @@ function getNavbar() {
           navbarLinks += "<li class=\"active\"><a href=\"" + page_short_title.replace(' ', '-') + "\">" + page_short_title + "</a></li>\n";
         };
       };
-      if (site.is_setup === true) {
-        if (sessionStorage.token) {
-          navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getEditForm()\">Edit This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"deletePage()\">Delete This Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getNewPageForm()\">New Page</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getImportForm()\">Admin</a></li><li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"logout()\">Logout</a></li>";
-        } else {
-          navbarLinks += "<li class=\"active\"><a href=\"javascript:void(0);\" onclick=\"getLoginForm()\">Login</a></li><li class=\"active\"><a id=\"contact-email\" href=\"http://kris.shaffermusic.com/contact/\">Contact</a></li><li class=\"active\">";
-        };
-        document.getElementById('navbar').innerHTML = navbarContent;
-        document.getElementById('navbar-links').innerHTML = navbarLinks;
-        if (!sessionStorage.token) {
-          document.getElementById('contact-email').href = 'mailto:' + site.contact_email;
-        }
-      }
+
+      document.getElementById('navbar').innerHTML = navbarContent;
+      document.getElementById('navbar-links').innerHTML = navbarLinks;
     });
   });
 };
@@ -49,12 +40,13 @@ function getCurrentPage() {
 };
 
 
-// load syllabus data from site_content.json and populate page
+// load page data from site_content.json and populate page
 function getPageContent(pageName) {
   var siteRoot = window.location.hostname;
   window.location.assign('https://' + siteRoot + '/' + pageName.replace(' ', '-').replace('%20', '-'));
 };
 
+/*
 // opens edit page, loads data from database for editing
 function getEditForm() {
   current_page = getCurrentPage();
@@ -175,7 +167,9 @@ function getEditForm() {
   });
   event.preventDefault();
 };
+*/
 
+/*
 // collect document information from edit form`and write to database
 function collectContent() {
   $.getJSON('site_content.json', function (data) {
@@ -215,7 +209,9 @@ function collectContent() {
   });
   event.preventDefault();
 };
+*/
 
+/*
 function deletePage() {
   current_page = getCurrentPage();
   var yes_i_really_want_to = confirm("Click OK if you want to permanently delete the " + current_page + " page from your site. Otherwise click Cancel.");
@@ -234,7 +230,9 @@ function deletePage() {
     });
   }
 }
+*/
 
+/*
 function getNewPageForm() {
   $.ajax({
     headers: { 'Authorization': ('Bearer ' + sessionStorage.token)},
@@ -248,7 +246,9 @@ function getNewPageForm() {
     }
   });
 };
+*/
 
+/*
 // collect document information from edit form`and write to database
 function createNewPage() {
   $.getJSON('site_content.json', function (data) {
@@ -282,7 +282,9 @@ function createNewPage() {
   });
   event.preventDefault();
 };
+*/
 
+/*
 function getImportForm() {
   $.ajax({
     headers: { 'Authorization': ('Bearer ' + sessionStorage.token)},
@@ -294,7 +296,9 @@ function getImportForm() {
     }
   });
 };
+*/
 
+/*
 // get URL of site to clone from user,
 // fetch data, then go to edit page
 function editFromURL() {
@@ -339,7 +343,9 @@ function editFromURL() {
   }
   event.preventDefault();
 };
+*/
 
+/*
 function loginToSite() {
   var username = document.loginform.username.value;
   var password = document.loginform.password.value;
@@ -365,25 +371,31 @@ function loginToSite() {
   },
   error: function (jqXHR, textStatus, errorThrown) {
               delete sessionStorage.token;
-              alert("Login error. Please check your username and password." /* + "jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown */ );
+              alert("Login error. Please check your username and password." + "jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown );
             }
   });
   event.preventDefault();
 };
+*/
 
+/*
 function logout() {
   delete sessionStorage.token;
   getNavbar();
   getPageContent('Home');
 };
+*/
 
+/*
 function getLoginForm() {
   $.get('includes/login_form.html', function (data) {
     var importFormContent = data;
     document.getElementById('page-content').innerHTML = importFormContent;
   });
 };
+*/
 
+/*
 // update password from Admin panel
 function changePassword() {
   var username = document.update_password.username.value;
@@ -409,19 +421,23 @@ function changePassword() {
   },
   error: function (jqXHR, textStatus, errorThrown) {
               delete sessionStorage.token;
-              alert("Incorrect login information. Password NOT updated. Please try again." /* + "jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown */ );
+              alert("Incorrect login information. Password NOT updated. Please try again." + "jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown );
             }
   });
   event.preventDefault();
 };
+*/
 
+/*
 function updateConfigData(username, new_password) {
   $.get('https://syllabus.pushpullfork.com/generate_key.php', function (data) {
     postConfigData(username, new_password, data.secretkey);
   });
   event.preventDefault();
 };
+*/
 
+/*
 function postConfigData(username, new_password, secret_key) {
   var secret_key = secret_key;
   var login_object = {
@@ -443,7 +459,9 @@ function postConfigData(username, new_password, secret_key) {
   });
   event.preventDefault();
 };
+*/
 
+/*
 function loginNewCreds(username, password) {
   delete sessionStorage.token;
   var login_object = {
@@ -467,12 +485,13 @@ function loginNewCreds(username, password) {
   },
   error: function (jqXHR, textStatus, errorThrown) {
               delete sessionStorage.token;
-              alert("Login error. Please check your username and password." /* + "jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown */ );
+              alert("Login error. Please check your username and password." + "jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown );
             }
   });
 };
+*/
 
-
+/*
 // when site is not yet setup, opens setup form,
 // loads and edits/adds meta data
 function getSetupForm() {
@@ -487,15 +506,18 @@ function getSetupForm() {
     }
   });
 };
+*/
 
-
+/*
 function writeInitialSetupData() {
   $.get('https://syllabus.pushpullfork.com/generate_key.php', function (data) {
     postSetupData(data.secretkey);
   });
   event.preventDefault();
 };
+*/
 
+/*
 function postSetupData(secret_key) {
   var secret_key = secret_key;
   var siteImportURL = (document.setupform.metaclone.value + '/api.php');
@@ -524,7 +546,9 @@ function postSetupData(secret_key) {
   });
   event.preventDefault();
 };
+*/
 
+/*
 // fetch data for initial site import, then go to edit page
 function importFromURL(siteImportURL, siteImportURL_root, title, author, email) {
   var site_meta_object = {
@@ -570,3 +594,4 @@ function importFromURL(siteImportURL, siteImportURL_root, title, author, email) 
   });
   event.preventDefault();
 };
+*/

@@ -44,34 +44,29 @@
   $unparsed = file_get_contents('site_content.json');
   $site_content = json_decode($unparsed, true);
 
-  if ($site_content['meta']['is_setup'] === true) {
-    $current_url = current_url();
-    $parsed_url = parse_url($current_url);
-    $current_page = ucwords(strtolower(str_replace('-', ' ', str_replace('%20', ' ', str_replace('/', '', $_SERVER['REQUEST_URI'])))));
-    if ($current_page === '' || $current_page === 'index.php' || $current_page === 'index.html' || $current_page === 'index' || $current_page === 'home') {
-      $current_page = 'Home';
-      }
-
-    $navbar = ''; // for later
-
-    $header_content = $site_content['pages'][$current_page]['title'];
-    $main_content = $site_content['pages'][$current_page]['content'];
-    $footer_content = $site_content['meta']['footer_copyright'] . $site_content['meta']['copyright_year'] . ' ' . $site_content['meta']['author'] . '. ' . $site_content['meta']['footer_license'] . '<br/>' . $site_content['meta']['footer_attribution'];
-
-    $page_content = '<div id="navbar">';
-    $page_content .= $navbar;
-    $page_content .= '</div>';
-
-    $banner_file = './files/banner.jpg';
-    if (file_exists($banner_file)) {
-      $page_content .= '<div id="banner-image"><img src="/files/banner.jpg" alt="Contribute: hand adding freshly chewed piece of gum to a wall containing many differently colored pieces of chewed gum." style="width: 100%; padding: 0px; margin: 0px; border: 0px;" /></div>';
-    };
-
-  } else {
-    $main_content = file_get_contents('includes/setup_form.html');
-    $header_content = 'Peasy site setup';
-    $footer_content = '';
+  $current_url = current_url();
+  $parsed_url = parse_url($current_url);
+  $current_page = ucwords(strtolower(str_replace('-', ' ', str_replace('%20', ' ', str_replace('/', '', $_SERVER['REQUEST_URI'])))));
+  if ($current_page === '' || $current_page === 'index.php' || $current_page === 'index.html' || $current_page === 'index' || $current_page === 'home') {
+    $current_page = 'Home';
     }
+
+  // need to fetch current_page from an html file instead of site_content.json
+  $header_content = $site_content['pages'][$current_page]['title'];
+  $main_content = file_get_contents('./content/' . $site_content['pages'][$current_page]['filename']);
+  $footer_content = $site_content['meta']['footer_copyright'] . $site_content['meta']['copyright_year'] . ' ' . $site_content['meta']['author'] . '. ' . $site_content['meta']['footer_license'] . '<br/>' . $site_content['meta']['footer_attribution'];
+
+  // build navbar
+  $page_content = '<div id="navbar">';
+  $page_content .= '';
+  $page_content .= '</div>';
+
+
+  $banner_file = $site_content['pages'][$current_page]['feature_image'];
+  $banner_alt_text = $site_content['pages'][$current_page]['feature_image_alt_text'];
+  if (file_exists('./files/' . $banner_file)) {
+    $page_content .= '<div id="banner-image"><img src="/files/' . $banner_file . '" alt="' . $banner_alt_text . '" style="width: 100%; padding: 0px; margin: 0px; border: 0px;" /></div>';
+  };
 
   $page_content .= '<div class="container"><div class="col-md-2"></div><div class="col-md-8">';
 
