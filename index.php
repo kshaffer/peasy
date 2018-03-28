@@ -64,7 +64,7 @@
 
   $banner_file = $site_content['pages'][$current_page]['feature_image'];
   $banner_alt_text = $site_content['pages'][$current_page]['feature_image_alt_text'];
-  if (file_exists('./files/' . $banner_file)) {
+  if (file_exists('./files/' . $banner_file) && $banner_file != '') {
     $page_content .= '<div id="banner-image"><img src="/files/' . $banner_file . '" alt="' . $banner_alt_text . '" style="width: 100%; padding: 0px; margin: 0px; border: 0px;" /></div>';
   };
 
